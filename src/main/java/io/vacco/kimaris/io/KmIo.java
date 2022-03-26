@@ -1,5 +1,6 @@
 package io.vacco.kimaris.io;
 
+import io.vacco.fastbitmap.KfBitmap;
 import io.vacco.kimaris.schema.*;
 import java.net.URL;
 import java.nio.*;
@@ -85,6 +86,19 @@ public class KmIo {
     fc.treePred = toArrayF(tPreds);
 
     return fc;
+  }
+
+  public static KmImageParams loadImage(URL url) {
+    var img = new KfBitmap(url);
+    var ip = new KmImageParams();
+
+    img.toGrayscale();
+    ip.cols = img.getWidth();
+    ip.rows = img.getHeight();
+    ip.dim = ip.cols;
+    ip.pixels = img.getGrayData();
+
+    return ip;
   }
 
 }

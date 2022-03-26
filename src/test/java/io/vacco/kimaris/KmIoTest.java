@@ -18,6 +18,8 @@ public class KmIoTest {
       var fu = KmIoTest.class.getResource("/io/vacco/kimaris/facefinder");
       var fc = KmIo.unpackFaceCascade(fu);
 
+      var ip = KmIo.loadImage(KmIoTest.class.getResource("/sample.jpg"));
+
       System.out.println("Done");
     });
   }
