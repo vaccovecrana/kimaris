@@ -1,5 +1,6 @@
 package io.vacco.kimaris;
 
+import io.vacco.kimaris.impl.KmPico;
 import io.vacco.kimaris.io.KmIo;
 import j8spec.annotation.DefinedOrder;
 import j8spec.junit.J8SpecRunner;
@@ -19,6 +20,8 @@ public class KmIoTest {
       var fc = KmIo.unpackFaceCascade(fu);
 
       var ip = KmIo.loadImage(KmIoTest.class.getResource("/sample.jpg"));
+
+      var cs = KmPico.loadCascades();
 
       System.out.println("Done");
     });
