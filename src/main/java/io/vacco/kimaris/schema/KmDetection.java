@@ -11,4 +11,8 @@ public class KmDetection {
     det.q = q;
     return det;
   }
+
+  @Override public String toString() {
+    return String.format("det[%s, q: %.3f]", coord, q);
+  }
 }

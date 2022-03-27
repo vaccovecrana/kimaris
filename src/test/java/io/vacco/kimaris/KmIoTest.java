@@ -2,6 +2,7 @@ package io.vacco.kimaris;
 
 import io.vacco.kimaris.impl.KmPico;
 import io.vacco.kimaris.io.KmIo;
+import io.vacco.kimaris.schema.KmScanParams;
 import j8spec.annotation.DefinedOrder;
 import j8spec.junit.J8SpecRunner;
 import org.junit.runner.RunWith;
@@ -12,17 +13,8 @@ import static j8spec.J8Spec.*;
 @RunWith(J8SpecRunner.class)
 public class KmIoTest {
   static {
-    it("Reads the pupil cascade file", () -> {
-      var u = KmIoTest.class.getResource("/io/vacco/kimaris/lp42");
-      var lol = KmIo.unpackCascade(u);
-
-      var fu = KmIoTest.class.getResource("/io/vacco/kimaris/facefinder");
-      var fc = KmIo.unpackFaceCascade(fu);
-
-      var ip = KmIo.loadImage(KmIoTest.class.getResource("/sample.jpg"));
-
-      var cs = KmPico.loadCascades();
-
+    it("Detects faces in an image", () -> {
+      var lol = KmPico.detectFaces(KmIo.loadCascades(), KmScanParams.defaultParams(), KmIoTest.class.getResource("/sample.jpg"));
       System.out.println("Done");
     });
   }

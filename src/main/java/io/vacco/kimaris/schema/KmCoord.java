@@ -18,4 +18,7 @@ public class KmCoord {
     return c;
   }
 
+  @Override public String toString() {
+    return String.format("crd[r: %d, c: %d, s: %d]", row, col, scale);
+  }
 }
