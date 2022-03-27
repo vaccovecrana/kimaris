@@ -5,7 +5,7 @@ import java.util.*;
 
 public class KmDetFace {
 
-  public static int binTest(int px1, int px2) {
+  private static int binTestGtEq(int px1, int px2) {
     if (px1 <= px2) { return 1; }
     return 0;
   }
@@ -23,7 +23,7 @@ public class KmDetFace {
           x2 = ((r + pg.treeCodes[root + 4 * idx + 2] * s) >> 8) * dim + ((c + pg.treeCodes[root + 4 * idx + 3] * s) >> 8);
           px1 = pixels[x1] & 0xff;
           px2 = pixels[x2] & 0xff;
-          idx = 2 * idx + binTest(px1, px2);
+          idx = 2 * idx + binTestGtEq(px1, px2);
         }
         out += pg.treePred[treeDepth * i + idx - treeDepth];
         if (out <= pg.treeThreshold[i]) {
@@ -80,7 +80,7 @@ public class KmDetFace {
 
     while (scale <= cp.maxSize) {
       double step = Math.max(cp.shiftFactor * scale, 1);
-      int offset = (int) ((double) scale / 2 + 1);
+      int offset = scale / 2 + 1;
       for (int row = offset; row <= ip.rows - offset; row += step) {
         for (int col = offset; col <= ip.cols - offset; col += step) {
           q = classifyRegion(row, col, scale, treeDepth, pixels, ip.dim, pg);

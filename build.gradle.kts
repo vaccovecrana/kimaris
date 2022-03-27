@@ -10,5 +10,5 @@ configure<io.vacco.oss.gitflow.GsPluginProfileExtension> {
 }
 
 dependencies {
-  testImplementation("io.vacco.jsonbeans:jsonbeans:1.0.0")
+  testImplementation("com.google.code.gson:gson:2.9.0")
 }

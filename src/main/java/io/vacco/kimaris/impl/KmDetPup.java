@@ -5,6 +5,11 @@ import java.util.Arrays;
 
 public class KmDetPup {
 
+  private static int binTestLt(int px1, int px2) {
+    if (px1 > px2) { return 1; }
+    return 0;
+  }
+
   public static void classifyRegion(double r, double c, double s,
                                     int treeDepth, int nrows, int ncols,
                                     byte[] pixels, int dim, boolean flipV,
@@ -27,7 +32,7 @@ public class KmDetPup {
           }
           px1 = pixels[r1 * dim + c1] & 0xff;
           px2 = pixels[r2 * dim + c2] & 0xff;
-          idx = 2 * idx + 1 + KmDetFace.binTest(px1, px2);
+          idx = 2 * idx + 1 + binTestLt(px1, px2);
         }
         int lutIdx = 2 * (int) (plc.trees * treeDepth * i + treeDepth * j + idx - (treeDepth - 1));
         dr += plc.treePreds[lutIdx + 0];
@@ -47,17 +52,23 @@ public class KmDetPup {
     out[2] = s;
   }
 
-  public static KmCoord runCascade(int perturbs, KmCoord coord, KmImageParams img, boolean flipV, KmCascade plc) {
+  public static KmCoord runCascade(int perturbs, KmCoord pl, KmImageParams img, boolean flipV, KmCascade plc) {
     var res = new double[3];
     var treeDepth = (int) Math.pow(2, plc.treeDepth);
     var detRows = new double[perturbs]; // TODO this needs optimization.
     var detCols = new double[perturbs];
     var detScale = new double[perturbs];
 
+    double r0, r1, r2;
+
     for (int i = 0; i < perturbs; i++) {
-      int row = (int) (coord.row + coord.scale * 0.15 * (0.5 - Math.random()));
-      int col = (int) (coord.col + coord.scale * 0.15 * (0.5 - Math.random()));
-      int sc = (int) (coord.scale * (0.925 + 0.15 * Math.random()));
+      r0 = Math.random();
+      r1 = Math.random();
+      r2 = Math.random();
+
+      double row = pl.row + pl.scale * 0.15 * (0.5 - r0);
+      double col = pl.col + pl.scale * 0.15 * (0.5 - r1);
+      double sc = pl.scale * (0.925 + 0.15 * r2);
 
       classifyRegion(row, col, sc, treeDepth, img.rows, img.cols, img.pixels, img.dim, flipV, res, plc);
 
@@ -73,7 +84,7 @@ public class KmDetPup {
     return KmCoord.from(
         (int) detRows[(int) Math.round(perturbs / 2d)],
         (int) detCols[(int) Math.round(perturbs / 2d)],
-        (int) detScale[(int) Math.round(perturbs / 2d)]
+        detScale[(int) Math.round(perturbs / 2d)]
     );
   }
 

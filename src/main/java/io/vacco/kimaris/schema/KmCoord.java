@@ -4,13 +4,13 @@ public class KmCoord {
 
   public int row;
   public int col;
-  public int scale;
+  public double scale;
 
   public boolean valid() {
     return row > 0 && col > 0;
   }
 
-  public static KmCoord from(int row, int col, int scale) {
+  public static KmCoord from(int row, int col, double scale) {
     var c = new KmCoord();
     c.col = col;
     c.row = row;
@@ -19,6 +19,6 @@ public class KmCoord {
   }
 
   @Override public String toString() {
-    return String.format("crd[r: %d, c: %d, s: %d]", row, col, scale);
+    return String.format("crd[r: %d, c: %d, s: %.3f]", row, col, scale);
   }
 }

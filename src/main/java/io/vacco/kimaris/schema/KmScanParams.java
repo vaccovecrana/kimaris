@@ -19,10 +19,10 @@ public class KmScanParams {
 
     cp.minSize = 20;
     cp.maxSize = 1000;
-    cp.shiftFactor = 0.2;
-    cp.scaleFactor = 1.1;
+    cp.shiftFactor = 0.15;
+    cp.scaleFactor = 1.15;
 
-    cp.iouThreshold = 0.1; // TODO confirm these three
+    cp.iouThreshold = 0.15;
     cp.qThreshold = 5.0;
     cp.faceScaleThreshold = 50;
 

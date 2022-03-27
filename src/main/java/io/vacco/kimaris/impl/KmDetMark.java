@@ -11,11 +11,11 @@ public class KmDetMark {
     int dy = (leftEye.col - rightEye.col) * (leftEye.col - rightEye.col);
     double dist = Math.sqrt(dx + dy);
 
-    double row = leftEye.row + rightEye.row / 2.0 + 0.25 * dist;
-    double col = leftEye.col + rightEye.col / 2.0 + 0.15 * dist;
+    double row = ((double) (leftEye.row + rightEye.row)) / 2.0 + 0.25 * dist;
+    double col = ((double) (leftEye.col + rightEye.col)) / 2.0 + 0.15 * dist;
     double scale = 3.0 * dist;
 
-    var coord = KmCoord.from((int) row, (int) col, (int) scale);
+    var coord = KmCoord.from((int) row, (int) col, scale);
 
     return KmDetPup.runCascade(perturb, coord, img, flipV, plc);
   }
