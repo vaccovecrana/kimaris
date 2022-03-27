@@ -10,29 +10,33 @@ public class KmScanParams {
   public double iouThreshold, qThreshold;
   public int faceScaleThreshold;
 
-  public static KmScanParams from(int minSize, int maxSize,
-                                  double shiftFactor, double scaleFactor,
-                                  double iouThreshold, double qThreshold,
-                                  int faceScaleThreshold) {
-    var cp = new KmScanParams();
-    cp.minSize = minSize;
-    cp.maxSize = maxSize;
-    cp.shiftFactor = shiftFactor;
-    cp.scaleFactor = scaleFactor;
-
-    cp.iouThreshold = iouThreshold;
-    cp.qThreshold = qThreshold;
-    cp.faceScaleThreshold = faceScaleThreshold;
-
-    return cp;
-  }
+  public double leftEyeOffsetRow, leftEyeOffsetCol, leftEyeOffsetScale;
+  public double rightEyeOffsetRow, rightEyeOffsetCol, rightEyeOffsetScale;
+  public int perturbations;
 
   public static KmScanParams defaultParams() {
-    return from(
-        20, 1000, 0.2, 1.1,
-        0.1, 5.0, // TODO confirm these two
-        50
-    );
+    var cp = new KmScanParams();
+
+    cp.minSize = 20;
+    cp.maxSize = 1000;
+    cp.shiftFactor = 0.2;
+    cp.scaleFactor = 1.1;
+
+    cp.iouThreshold = 0.1; // TODO confirm these three
+    cp.qThreshold = 5.0;
+    cp.faceScaleThreshold = 50;
+
+    cp.leftEyeOffsetRow = 0.075;
+    cp.leftEyeOffsetCol = 0.175;
+    cp.leftEyeOffsetScale = 0.25;
+
+    cp.rightEyeOffsetRow = 0.075;
+    cp.rightEyeOffsetCol = 0.185;
+    cp.rightEyeOffsetScale = 0.25;
+
+    cp.perturbations = 63;
+
+    return cp;
   }
 
 }

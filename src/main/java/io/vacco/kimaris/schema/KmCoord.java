@@ -6,6 +6,10 @@ public class KmCoord {
   public int col;
   public int scale;
 
+  public boolean valid() {
+    return row > 0 && col > 0;
+  }
+
   public static KmCoord from(int row, int col, int scale) {
     var c = new KmCoord();
     c.col = col;
