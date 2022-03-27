@@ -1,6 +1,5 @@
 package io.vacco.kimaris.io;
 
-import io.vacco.fastbitmap.KfBitmap;
 import io.vacco.kimaris.impl.KmPico;
 import io.vacco.kimaris.schema.*;
 import java.net.URL;
@@ -9,7 +8,7 @@ import java.util.ArrayList;
 
 import static io.vacco.kimaris.io.KmArrays.*;
 
-public class KmIo {
+public class KmCascades {
 
   public static KmCascade unpackCascade(URL url) {
     var bytes = bytesFrom(url);
@@ -89,37 +88,24 @@ public class KmIo {
     return fc;
   }
 
-  public static KmImageParams loadImage(URL url) {
-    var img = new KfBitmap(url);
-    var ip = new KmImageParams();
-
-    img.toGrayscale();
-    ip.cols = img.getWidth();
-    ip.rows = img.getHeight();
-    ip.dim = ip.cols;
-    ip.pixels = img.getGrayData();
-
-    return ip;
-  }
-
   public static KmCascadeSet loadCascades() {
     var cs = new KmCascadeSet();
 
-    cs.face = KmIo.unpackFaceCascade(KmPico.class.getResource("/io/vacco/kimaris/facefinder"));
-    cs.pupil = KmIo.unpackCascade(KmPico.class.getResource("/io/vacco/kimaris/puploc"));
+    cs.face = KmCascades.unpackFaceCascade(KmPico.class.getResource("/io/vacco/kimaris/facefinder"));
+    cs.pupil = KmCascades.unpackCascade(KmPico.class.getResource("/io/vacco/kimaris/puploc"));
 
     cs.eyeCascades = new KmCascade[] {
-        KmIo.unpackCascade(KmPico.class.getResource("/io/vacco/kimaris/lp46")),
-        KmIo.unpackCascade(KmPico.class.getResource("/io/vacco/kimaris/lp44")),
-        KmIo.unpackCascade(KmPico.class.getResource("/io/vacco/kimaris/lp42")),
-        KmIo.unpackCascade(KmPico.class.getResource("/io/vacco/kimaris/lp38")),
-        KmIo.unpackCascade(KmPico.class.getResource("/io/vacco/kimaris/lp312"))
+        KmCascades.unpackCascade(KmPico.class.getResource("/io/vacco/kimaris/lp46")),
+        KmCascades.unpackCascade(KmPico.class.getResource("/io/vacco/kimaris/lp44")),
+        KmCascades.unpackCascade(KmPico.class.getResource("/io/vacco/kimaris/lp42")),
+        KmCascades.unpackCascade(KmPico.class.getResource("/io/vacco/kimaris/lp38")),
+        KmCascades.unpackCascade(KmPico.class.getResource("/io/vacco/kimaris/lp312"))
     };
     cs.mouthCascades = new KmCascade[] {
-        KmIo.unpackCascade(KmPico.class.getResource("/io/vacco/kimaris/lp93")),
-        KmIo.unpackCascade(KmPico.class.getResource("/io/vacco/kimaris/lp84")),
-        KmIo.unpackCascade(KmPico.class.getResource("/io/vacco/kimaris/lp82")),
-        KmIo.unpackCascade(KmPico.class.getResource("/io/vacco/kimaris/lp81"))
+        KmCascades.unpackCascade(KmPico.class.getResource("/io/vacco/kimaris/lp93")),
+        KmCascades.unpackCascade(KmPico.class.getResource("/io/vacco/kimaris/lp84")),
+        KmCascades.unpackCascade(KmPico.class.getResource("/io/vacco/kimaris/lp82")),
+        KmCascades.unpackCascade(KmPico.class.getResource("/io/vacco/kimaris/lp81"))
     };
     cs.mouthLp84 = cs.mouthCascades[1];
 

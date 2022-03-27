@@ -1,6 +1,6 @@
 package io.vacco.kimaris.impl;
 
-import io.vacco.kimaris.io.KmIo;
+import io.vacco.kimaris.io.KmImage;
 import io.vacco.kimaris.schema.*;
 import java.net.URL;
 import java.util.Arrays;
@@ -8,8 +8,8 @@ import java.util.stream.Stream;
 
 public class KmPico {
 
-  public static KmFace[] detectFaces(KmCascadeSet cs, KmScanParams cp, URL imageUrl) {
-    var imgParams = KmIo.loadImage(imageUrl);
+  public static KmFace[] detectFaces(KmCascadeSet cs, KmScanParams cp, KmImageParams ip, URL imageUrl) {
+    var imgParams = KmImage.grayPixelsOf(imageUrl, ip);
     return KmDetFace.clusterDetections(KmDetFace.runCascade(cs.face, cp, imgParams), cp.iouThreshold)
         .stream()
         .filter(det -> det.q > cp.qThreshold)
