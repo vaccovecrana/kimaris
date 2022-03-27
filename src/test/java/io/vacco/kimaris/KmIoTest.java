@@ -16,14 +16,15 @@ import static j8spec.J8Spec.*;
 @RunWith(J8SpecRunner.class)
 public class KmIoTest {
 
+  private static final URL imageRgbNoFaceUrl = Objects.requireNonNull(KmIoTest.class.getResource("/sample-no-face.png"));
   private static final URL imageRgbUrl = Objects.requireNonNull(KmIoTest.class.getResource("/sample.jpg"));
   private static final URL imageGraUrl = Objects.requireNonNull(KmIoTest.class.getResource("/sample-gray.png"));
 
   static {
-    it("Detects faces in an image", () -> {
+    it("Detects faces/no-faces in images", () -> {
       var g = new GsonBuilder().setPrettyPrinting().create();
       var ipb = new KmImageParams();
-      var images = new URL[] { imageRgbUrl, imageGraUrl };
+      var images = new URL[] { imageRgbNoFaceUrl, imageRgbUrl, imageGraUrl };
       for (URL img : images) {
         var fa = KmPico.detectFaces(KmCascades.loadCascades(), KmScanParams.defaultParams(), ipb, img);
         System.out.println(g.toJson(fa));
