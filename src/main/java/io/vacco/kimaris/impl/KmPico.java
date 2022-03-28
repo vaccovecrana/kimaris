@@ -1,16 +1,13 @@
 package io.vacco.kimaris.impl;
 
-import io.vacco.kimaris.io.KmImage;
 import io.vacco.kimaris.schema.*;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
 public class KmPico {
 
-  public static KmFace[] detectFaces(KmCascadeSet cs, KmScanParams cp, KmImageParams ip, URL imageUrl) {
-    var imgParams = KmImage.grayPixelsOf(imageUrl, ip);
-    return KmDetFace.clusterDetections(KmDetFace.runCascade(cs.face, cp, imgParams), cp.iouThreshold)
+  public static KmFace[] detectFaces(KmCascadeSet cs, KmScanParams cp, KmImageParams ip) {
+    return KmDetFace.clusterDetections(KmDetFace.runCascade(cs.face, cp, ip), cp.iouThreshold)
         .stream()
         .filter(det -> det.q > cp.qThreshold)
         .map(det -> {
@@ -29,22 +26,22 @@ public class KmPico {
               det.coord.col + (int) (cp.rightEyeOffsetCol * det.coord.scale),
               det.coord.scale * cp.rightEyeOffsetScale
           );
-          var leftLoc = KmDetPup.runCascade(cp.perturbations, leftTest, imgParams, false, cs.pupil);
-          var rightLoc = KmDetPup.runCascade(cp.perturbations, rightTest, imgParams, false, cs.pupil);
+          var leftLoc = KmDetPup.runCascade(cp.perturbations, leftTest, ip, false, cs.pupil);
+          var rightLoc = KmDetPup.runCascade(cp.perturbations, rightTest, ip, false, cs.pupil);
 
           if (leftLoc.valid()) { face.leftEye = leftLoc; }
           if (rightLoc.valid()) { face.rightEye = rightLoc; }
           if (leftLoc.valid() && rightLoc.valid()) {
             face.eyeMarks = Arrays.stream(cs.eyeCascades)
                 .flatMap(ec -> Stream.of(
-                    KmDetMark.runCascade(leftLoc, rightLoc, imgParams, cp.perturbations, false, ec),
-                    KmDetMark.runCascade(leftLoc, rightLoc, imgParams, cp.perturbations, true, ec)
+                    KmDetMark.runCascade(leftLoc, rightLoc, ip, cp.perturbations, false, ec),
+                    KmDetMark.runCascade(leftLoc, rightLoc, ip, cp.perturbations, true, ec)
                 ))
                 .filter(KmCoord::valid)
                 .toArray(KmCoord[]::new); // TODO optimize this
             face.mouthMarks = Stream.concat(
-                Arrays.stream(cs.mouthCascades).map(mc -> KmDetMark.runCascade(leftLoc, rightLoc, imgParams, cp.perturbations, false, mc)),
-                Stream.of(KmDetMark.runCascade(leftLoc, rightLoc, imgParams, cp.perturbations, true, cs.mouthLp84))
+                Arrays.stream(cs.mouthCascades).map(mc -> KmDetMark.runCascade(leftLoc, rightLoc, ip, cp.perturbations, false, mc)),
+                Stream.of(KmDetMark.runCascade(leftLoc, rightLoc, ip, cp.perturbations, true, cs.mouthLp84))
             ).filter(KmCoord::valid).toArray(KmCoord[]::new);
           }
           return face;
