@@ -5,11 +5,6 @@ import java.util.Arrays;
 
 public class KmDetPup {
 
-  private static int binTestLt(int px1, int px2) {
-    if (px1 > px2) { return 1; }
-    return 0;
-  }
-
   public static void classifyRegion(double r, double c, double s,
                                     int treeDepth, int nrows, int ncols,
                                     byte[] pixels, int dim, boolean flipV,
@@ -32,7 +27,7 @@ public class KmDetPup {
           }
           px1 = pixels[r1 * dim + c1] & 0xff;
           px2 = pixels[r2 * dim + c2] & 0xff;
-          idx = 2 * idx + 1 + binTestLt(px1, px2);
+          idx = 2 * idx + 1 + (px1 > px2 ? 1 : 0);
         }
         int lutIdx = 2 * (int) (plc.trees * treeDepth * i + treeDepth * j + idx - (treeDepth - 1));
         dr += plc.treePreds[lutIdx + 0];

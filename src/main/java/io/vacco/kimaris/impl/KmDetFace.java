@@ -5,11 +5,6 @@ import java.util.*;
 
 public class KmDetFace {
 
-  private static int binTestGtEq(int px1, int px2) {
-    if (px1 <= px2) { return 1; }
-    return 0;
-  }
-
   public static double classifyRegion(int r, int c, int s, int treeDepth, byte[] pixels, int dim, KmFaceCascade pg) {
     double out = 0;
     int root = 0, px1, px2;
@@ -23,7 +18,7 @@ public class KmDetFace {
           x2 = ((r + pg.treeCodes[root + 4 * idx + 2] * s) >> 8) * dim + ((c + pg.treeCodes[root + 4 * idx + 3] * s) >> 8);
           px1 = pixels[x1] & 0xff;
           px2 = pixels[x2] & 0xff;
-          idx = 2 * idx + binTestGtEq(px1, px2);
+          idx = 2 * idx + (px1 <= px2 ? 1 : 0);
         }
         out += pg.treePred[treeDepth * i + idx - treeDepth];
         if (out <= pg.treeThreshold[i]) {
