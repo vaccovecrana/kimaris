@@ -80,7 +80,7 @@ public class KmDetPup {
         (int) detRows[(int) Math.round(perturbs / 2d)],
         (int) detCols[(int) Math.round(perturbs / 2d)],
         detScale[(int) Math.round(perturbs / 2d)]
-    );
+    ).withLabel(String.format("%s%s", plc.id, flipV ? "-flp" : ""));
   }
 
 }

@@ -4,6 +4,7 @@ import io.vacco.kimaris.impl.KmPico;
 import io.vacco.kimaris.schema.*;
 import java.net.URL;
 import java.nio.*;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import static io.vacco.kimaris.io.KmArrays.*;
@@ -15,6 +16,7 @@ public class KmCascades {
     var bb = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN);
     var pup = new KmCascade();
 
+    pup.id = Paths.get(url.getFile()).getFileName().toString();
     pup.stages = bb.getInt();
     pup.scales = bb.getFloat();
     pup.trees = bb.getInt();
