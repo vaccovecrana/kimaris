@@ -37,9 +37,9 @@ public class KmIntImage {
   public static double areaOf(double[][] in,
                               int aX, int aY, int bX, int bY,
                               int dX, int dY, int cX, int cY) {
-    double a = in[aY][aX];
-    double b = in[bY][bX];
-    double c = in[cY][cX];
+    double a = (aY == -1 || aX == -1) ? 0 : in[aY][aX];
+    double b = bY == -1 ? 0 : in[bY][bX];
+    double c = cX == -1 ? 0 : in[cY][cX];
     double d = in[dY][dX];
     return a + d - b - c;
   }

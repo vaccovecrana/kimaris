@@ -30,8 +30,14 @@ public class KmIntImageTest {
       double sum = KmIntImage.areaOf(out, 1, 1, 3, 1, 3, 3, 1, 3);
       assertEquals(16.0, sum, 0.01);
 
+      sum = KmIntImage.areaOf(out, 0, 2, 2, 3);
+      assertEquals(24.0, sum, 0.01);
+
       sum = KmIntImage.areaOf(out, 1, 1, 3, 3);
       assertEquals(39.0, sum, 0.01);
+
+      sum = KmIntImage.areaOf(out, 0, 0, 3, 3);
+      assertEquals(36.0, sum, 0.01);
 
       sum = KmIntImage.areaOf(out, 1, 1, 2, 3);
       assertEquals(24.0, sum, 0.01);
