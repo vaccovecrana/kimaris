@@ -44,10 +44,10 @@ public class KmIntImage {
     return a + d - b - c;
   }
 
-  public static double areaOf(double[][] in, int aR, int aC, int rows, int cols) {
-    aC = aC - 1;
-    aR = aR - 1;
-    return areaOf(in, aR, aC, aR, aC + cols, aR + rows, aC + cols, aR + rows, aC);
+  public static double areaOf(double[][] in, int r, int c, int rows, int cols) {
+    c = c - 1;
+    r = r - 1;
+    return areaOf(in, r, c, r, c + cols, r + rows, c + cols, r + rows, c);
   }
 
 }

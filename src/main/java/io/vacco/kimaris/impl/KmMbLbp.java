@@ -20,8 +20,10 @@ public class KmMbLbp {
           in[row+1][col-1], in[row+1][col], in[row+1][col+1],
           out
       );
+    } else {
+      double c = areaOf(in, row, col, w, h);
+      System.out.println("lol");
     }
-    // double c = areaOf(in, )
   }
 
 }
