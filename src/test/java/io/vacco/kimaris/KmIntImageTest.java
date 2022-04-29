@@ -47,10 +47,10 @@ public class KmIntImageTest {
     });
 
     it("Calculates an arbitrary region at four points", () -> {
-      double sum = KmIntImage.areaOf(out, 1, 1, 3, 1, 3, 3, 1, 3);
+      double sum = KmIntImage.areaOf(out, 1, 1, 1, 3, 3, 3, 3, 1);
       assertEquals(16.0, sum, 0.01);
 
-      sum = KmIntImage.areaOf(out, 0, 2, 2, 3);
+      sum = KmIntImage.areaOf(out, 2, 0, 2, 3);
       assertEquals(24.0, sum, 0.01);
 
       sum = KmIntImage.areaOf(out, 1, 1, 3, 3);
@@ -72,7 +72,7 @@ public class KmIntImageTest {
     it("Calculates MLBP features on an input region", () -> {
       boolean[] out = new boolean[8];
 
-      KmMbLbp.apply(imgIn, out, 3, 6, 1);
+      KmMbLbp.apply(imgIn, out, 3, 6, 1, 1);
       assertFalse(out[0]);
       assertFalse(out[1]);
       assertTrue(out[2]);

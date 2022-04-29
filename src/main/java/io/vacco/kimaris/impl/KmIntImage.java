@@ -19,35 +19,35 @@ public class KmIntImage {
 
   /**
    * Retrieves the area under a rectangular within points
-   * <code>a, b, c, d</code> as <code>X,Y</code> coordinates
+   * <code>a, b, c, d</code> as <code>Row,Col</code> coordinates
    * in clock-wise order.
    *
    * <code>
-   *    aX,aY         bX,bY
+   *    aR,aC         bR,bC
    *        *---------*
    *        |         |
    *        |         |
    *        *---------*
-   *    cX,cY         dX,dY
+   *    cR,cC         dR,dC
    *</code>
    *
    * @param in an integral image rectangle
    * @return integral image area
    */
   public static double areaOf(double[][] in,
-                              int aX, int aY, int bX, int bY,
-                              int dX, int dY, int cX, int cY) {
-    double a = (aY == -1 || aX == -1) ? 0 : in[aY][aX];
-    double b = bY == -1 ? 0 : in[bY][bX];
-    double c = cX == -1 ? 0 : in[cY][cX];
-    double d = in[dY][dX];
+                              int aR, int aC, int bR, int bC,
+                              int dR, int dC, int cR, int cC) {
+    double a = (aR == -1 || aC == -1) ? 0 : in[aR][aC];
+    double b = bR == -1 ? 0 : in[bR][bC];
+    double c = cC == -1 ? 0 : in[cR][cC];
+    double d = in[dR][dC];
     return a + d - b - c;
   }
 
-  public static double areaOf(double[][] in, int aX, int aY, int rows, int cols) {
-    aX = aX - 1;
-    aY = aY - 1;
-    return areaOf(in, aX, aY, aX + cols, aY, aX + cols, aY + rows, aX, aY + rows);
+  public static double areaOf(double[][] in, int aR, int aC, int rows, int cols) {
+    aC = aC - 1;
+    aR = aR - 1;
+    return areaOf(in, aR, aC, aR, aC + cols, aR + rows, aC + cols, aR + rows, aC);
   }
 
 }
