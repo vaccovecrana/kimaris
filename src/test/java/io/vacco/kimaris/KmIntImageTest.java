@@ -83,7 +83,9 @@ public class KmIntImageTest {
 
       boolean[] out0 = new boolean[8];
       KmIntImage.apply(imgIn, imgOut);
-      KmMbLbp.apply(imgOut, out0, 3, 6, 2, 2);
+      KmMbLbp.apply(imgOut, out0, 3, 4, 1, 2);
+      KmMbLbp.apply(imgOut, out0, 3, 4, 2, 2);
+      KmMbLbp.apply(imgOut, out0, 3, 4, 3, 2);
     });
 
   }

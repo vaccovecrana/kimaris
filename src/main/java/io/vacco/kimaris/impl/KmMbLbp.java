@@ -21,8 +21,17 @@ public class KmMbLbp {
           out
       );
     } else {
-      double c = areaOf(in, row, col, w, h);
-      System.out.println("lol");
+      int rmh = row - h, rph = row + h;
+      int cmw = col - w, cpw = col + w;
+      double
+          nw = areaOf(in, rmh, cmw, w, h), n = areaOf(in, rmh, col, w, h), ne = areaOf(in, rmh, cpw, w, h),
+          cw = areaOf(in, row, cmw, w, h), c = areaOf(in, row, col, w, h), ce = areaOf(in, row, cpw, w, h),
+          sw = areaOf(in, rph, cmw, w, h), s = areaOf(in, rph, col, w, h), se = areaOf(in, rph, cpw, w, h);
+      apply(
+          nw, n, ne,
+          cw, c, ce,
+          sw, s, se, out
+      );
     }
   }
 
