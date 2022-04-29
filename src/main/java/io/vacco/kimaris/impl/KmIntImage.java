@@ -6,13 +6,13 @@ public class KmIntImage {
     double v;
     for (int i = 0; i < in[0].length; i++) { // columns
       for (int j = 0; j < in.length; j++) { // rows
-        v = in[i][j];
-        if (i > 0) { v = v + out[i - 1][j]; }
-        if (j > 0) { v = v + out[i][j - 1]; }
+        v = in[j][i];
+        if (i > 0) { v = v + out[j][i - 1]; }
+        if (j > 0) { v = v + out[j - 1][i]; }
         if (i > 0 && j > 0) {
-          v = v - out[i - 1][j -1];
+          v = v - out[j - 1][i -1];
         }
-        out[i][j] = v;
+        out[j][i] = v;
       }
     }
   }
