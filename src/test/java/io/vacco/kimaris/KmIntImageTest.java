@@ -71,7 +71,7 @@ public class KmIntImageTest {
       double[][] imgOut = new double[8][10];
       boolean[] out = new boolean[8];
 
-      KmMbLbp.apply(imgIn, out, 3, 6, 1, 1);
+      KmMbLbp.apply(imgIn, out, 3, 6, 1, 1, null);
       assertFalse(out[0]);
       assertFalse(out[1]);
       assertTrue(out[2]);
@@ -83,9 +83,12 @@ public class KmIntImageTest {
 
       boolean[] out0 = new boolean[8];
       KmIntImage.apply(imgIn, imgOut);
-      KmMbLbp.apply(imgOut, out0, 3, 4, 1, 2);
-      KmMbLbp.apply(imgOut, out0, 3, 4, 2, 2);
-      KmMbLbp.apply(imgOut, out0, 3, 4, 3, 2);
+      KmMbLbp.apply(imgOut, out0, 3, 4, 1, 2, null);
+      KmMbLbp.apply(imgOut, out0, 3, 4, 2, 2, null);
+      KmMbLbp.apply(imgOut, out0, 3, 4, 3, 2, null);
+
+      // MLBP - average pixel intensity
+      KmMbLbp.apply(imgOut, out0, 3, 4, 2, 2, v -> v / (2 * 2));
     });
 
   }
