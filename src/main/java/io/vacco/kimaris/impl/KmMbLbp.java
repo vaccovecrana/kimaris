@@ -52,21 +52,21 @@ public class KmMbLbp {
     );
   }
 
-  public static void scan(KmImageParams ip,
-                          int blkRows, int blkCols,
-                          int blkRowStride, int blkColStride,
-                          Consumer<short[]> onHistogram) {
+  public static short[] scan(KmImageParams ip,
+                             int blkRows, int blkCols,
+                             int blkRowStride, int blkColStride) {
     var intImgBuf = ip.blankBuf();
     var lbpBuf = new boolean[8];
     var lbpRows = blkRows * 3;
     var lbpCols = blkCols * 3;
-    var lbp = new short[1];
+    var lbpHist = new short[256];
     KmIntImage.apply(ip.grayMat, intImgBuf);
     KmConvolve.apply(lbpRows, lbpCols, blkRowStride, blkColStride, intImgBuf, reg -> {
       apply(reg, lbpBuf, blkRows, blkCols, blkRows, blkCols, val -> val / (blkRows * blkCols));
-      lbp[0] = KmMbLbp.unsignedFrom(lbpBuf);
-      System.out.println("now wut??? " + lbp[0]);
+      var lbp = KmMbLbp.unsignedFrom(lbpBuf);
+      lbpHist[lbp] = (short) (lbpHist[lbp] + 1);
     });
+    return lbpHist;
   }
 
 }
