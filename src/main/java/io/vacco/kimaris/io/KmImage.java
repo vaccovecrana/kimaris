@@ -12,22 +12,18 @@ public class KmImage {
     ip = ip == null ? new KmImageParams() : ip;
     ip.cols = img.getWidth();
     ip.rows = img.getHeight();
-    ip.dim = ip.cols;
+    ip.grayMat = ip.grayMat == null ? new short[ip.rows][ip.cols] : ip.grayMat;
 
-    if (img.getType() == BufferedImage.TYPE_BYTE_GRAY) {
-      ip.pixels = ((DataBufferByte) img.getRaster().getDataBuffer()).getData();
-    } else {
-      int r, g, b, n = 0;
-      ip.pixels = ip.pixels == null ? new byte[ip.cols * ip.rows] : ip.pixels;
-      for (int y = 0; y < ip.rows; y++) {
-        for (int x = 0; x < ip.cols; x++) {
-          int p = img.getRGB(x, y);
-          r = p >> 16 & 0xFF;
-          g = p >> 8 & 0xFF;
-          b = p & 0xFF;
-          ip.pixels[n] = (byte) ((r + g + b) / 3);
-          n++;
-        }
+    int r, g, b;
+    short gV;
+    for (int y = 0; y < ip.rows; y++) {
+      for (int x = 0; x < ip.cols; x++) {
+        int p = img.getRGB(x, y); // TODO is there a way to extract raw values when the image type is grayscale?
+        r = p >> 16 & 0xFF;
+        g = p >> 8 & 0xFF;
+        b = p & 0xFF;
+        gV = (short) ((byte) ((r + g + b) / 3) & 0xff);
+        ip.grayMat[y][x] = gV;
       }
     }
     return ip;

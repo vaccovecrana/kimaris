@@ -1,8 +1,12 @@
 package io.vacco.kimaris.schema;
 
 public class KmImageParams {
-  public byte[] pixels;
+
+  public short[][] grayMat;
   public int rows;
   public int cols;
-  public int dim;
+
+  public short[][] blankBuf() {
+    return new short[rows][cols];
+  }
 }

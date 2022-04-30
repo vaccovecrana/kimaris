@@ -1,9 +1,19 @@
 package io.vacco.kimaris.impl;
 
-import java.util.function.Function;
+import io.vacco.kimaris.schema.KmImageParams;
+import java.util.function.*;
 import static io.vacco.kimaris.impl.KmIntImage.*;
 
 public class KmMbLbp {
+
+  public static short unsignedFrom(boolean[] in) {
+    byte b = (byte) (
+        (in[0]?1<<7:0) + (in[1]?1<<6:0) +
+        (in[2]?1<<5:0) + (in[3]?1<<4:0) +
+        (in[4]?1<<3:0) + (in[5]?1<<2:0) +
+        (in[6]?1<<1:0) + (in[7]?1:0));
+    return (short) (b & 0xff);
+  }
 
   public static void apply(double nw, double n, double ne,
                            double cw, double c, double ce,
@@ -13,20 +23,22 @@ public class KmMbLbp {
     out[6] = sw > c; out[5] = s > c; out[4] = se > c;
   }
 
-  public static void apply(double[][] in, boolean[] out, int row, int col, int w, int h, Function<Double, Double> valFn) {
+  public static void apply(short[][] in, boolean[] out,
+                           int row, int col, int rS, int cS,
+                           Function<Double, Double> valFn) {
     double nw, n, ne,
            cw, c, ce,
            sw, s, se;
-    if (w == 1 && h == 1) { // base lbp case
+    if (cS == 1 && rS == 1) { // base lbp case
       nw = in[row-1][col-1]; n = in[row-1][col]; ne = in[row-1][col+1];
       cw = in[row  ][col-1]; c = in[row  ][col]; ce = in[row  ][col+1];
       sw = in[row+1][col-1]; s = in[row+1][col]; se = in[row+1][col+1];
     } else {
-      int rmh = row - h, rph = row + h;
-      int cmw = col - w, cpw = col + w;
-      nw = areaOf(in, rmh, cmw, w, h); n = areaOf(in, rmh, col, w, h); ne = areaOf(in, rmh, cpw, w, h);
-      cw = areaOf(in, row, cmw, w, h); c = areaOf(in, row, col, w, h); ce = areaOf(in, row, cpw, w, h);
-      sw = areaOf(in, rph, cmw, w, h); s = areaOf(in, rph, col, w, h); se = areaOf(in, rph, cpw, w, h);
+      int rmh = row - rS, rph = row + rS;
+      int cmw = col - cS, cpw = col + cS;
+      nw = areaOf(in, rmh, cmw, rS, cS); n = areaOf(in, rmh, col, rS, cS); ne = areaOf(in, rmh, cpw, rS, cS);
+      cw = areaOf(in, row, cmw, rS, cS); c = areaOf(in, row, col, rS, cS); ce = areaOf(in, row, cpw, rS, cS);
+      sw = areaOf(in, rph, cmw, rS, cS); s = areaOf(in, rph, col, rS, cS); se = areaOf(in, rph, cpw, rS, cS);
     }
     if (valFn != null) {
       nw = valFn.apply(nw); n = valFn.apply(n); ne = valFn.apply(ne);
@@ -38,6 +50,23 @@ public class KmMbLbp {
         cw, c, ce,
         sw, s, se, out
     );
+  }
+
+  public static void scan(KmImageParams ip,
+                          int blkRows, int blkCols,
+                          int blkRowStride, int blkColStride,
+                          Consumer<short[]> onHistogram) {
+    var intImgBuf = ip.blankBuf();
+    var lbpBuf = new boolean[8];
+    var lbpRows = blkRows * 3;
+    var lbpCols = blkCols * 3;
+    var lbp = new short[1];
+    KmIntImage.apply(ip.grayMat, intImgBuf);
+    KmConvolve.apply(lbpRows, lbpCols, blkRowStride, blkColStride, intImgBuf, reg -> {
+      apply(reg, lbpBuf, blkRows, blkCols, blkRows, blkCols, val -> val / (blkRows * blkCols));
+      lbp[0] = KmMbLbp.unsignedFrom(lbpBuf);
+      System.out.println("now wut??? " + lbp[0]);
+    });
   }
 
 }
