@@ -71,7 +71,6 @@ public class KmMbLbpTest {
     });
 
     it("Extracts MBLBP values from an image", () -> {
-      // var img = KmMbLbpTest.class.getResource("/reference-01.png");
       var img = KmMbLbpTest.class.getResource("/sample.jpg");
       var ip = KmImage.grayPixelsOf(img, null);
       KmMbLbp.mbLbpImageOf(
@@ -82,7 +81,7 @@ public class KmMbLbpTest {
     it("Extracts MBLBP histograms from an image", () -> {
       var img = KmMbLbpTest.class.getResource("/sample.jpg");
       var ip = KmImage.grayPixelsOf(img, null);
-      var lbpH = KmMbLbp.mbLbpHistogramOf(ip, 2, 2);
+      var lbpH = KmMbLbp.mbLbpHistogramOf(ip, 1, 1);
       var chart = obj(
           kv("tooltip", obj(kv("show", true))),
           kv("xAxis", obj(
