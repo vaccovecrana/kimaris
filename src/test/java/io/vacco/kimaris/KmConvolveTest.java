@@ -1,6 +1,7 @@
 package io.vacco.kimaris;
 
 import io.vacco.kimaris.impl.KmConvolve;
+import io.vacco.kimaris.schema.KmCoord;
 import j8spec.annotation.DefinedOrder;
 import j8spec.junit.J8SpecRunner;
 import org.junit.runner.RunWith;
@@ -11,8 +12,9 @@ import static j8spec.J8Spec.*;
 @RunWith(J8SpecRunner.class)
 public class KmConvolveTest {
 
-  public static void printMat(short[][] in) {
+  public static void printMat(KmCoord crd, short[][] in) {
     System.out.println("======================================");
+    System.out.println(crd);
     for (short[] r : in) {
       for (short v : r) {
         System.out.printf("%d ", v);
@@ -35,7 +37,7 @@ public class KmConvolveTest {
           {63, 64, 65, 66, 67, 68, 69, 70, 71},
           {72, 73, 74, 75, 76, 77, 78, 79, 80}
       };
-      printMat(mat);
+      printMat(null, mat);
       System.out.println("4x5;1,1");
       KmConvolve.apply(4, 5, 1, 1, mat, KmConvolveTest::printMat);
       System.out.println("4x4;2,2");

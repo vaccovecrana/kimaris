@@ -1,12 +1,14 @@
 package io.vacco.kimaris.impl;
 
-import java.util.function.Consumer;
+import io.vacco.kimaris.schema.KmCoord;
+import java.util.function.BiConsumer;
 
 public class KmConvolve {
 
-  public static void apply(int rows, int cols, int rowStride, int colStride, short[][] in, Consumer<short[][]> onRegion) {
+  public static void apply(int rows, int cols, int rowStride, int colStride, short[][] in, BiConsumer<KmCoord, short[][]> onRegion) {
     int r0 = 0, rN = r0 + rows;
     short[][] reg = new short[rows][cols];
+    var crd = new KmCoord();
     do {
       int c0 = 0, cN = cols;
       do {
@@ -19,7 +21,7 @@ public class KmConvolve {
           }
           ri++;
         }
-        onRegion.accept(reg);
+        onRegion.accept(crd.with(r0, c0), reg);
         c0 = c0 + colStride;
         cN = c0 + cols;
       } while(cN <= in[0].length);

@@ -1,9 +1,11 @@
-package io.vacco.kimaris.io;
+package io.vacco.kimaris.impl;
 
 import io.vacco.kimaris.schema.KmImageParams;
 import javax.imageio.ImageIO;
 import java.awt.image.*;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 
 public class KmImage {
@@ -47,4 +49,17 @@ public class KmImage {
     }
   }
 
+  public static void writePng(int w, int h, short[] pixels, File out) {
+    var data = new byte[w * h];
+    for (int i = 0; i < data.length; i++) {
+      data[i] = (byte) pixels[i];
+    }
+    try {
+      var image = new BufferedImage(w, h, BufferedImage.TYPE_BYTE_GRAY);
+      image.getRaster().setDataElements(0, 0, w, h, data);
+      ImageIO.write(image, "png", out);
+    } catch (IOException ex) {
+      throw new IllegalStateException(ex.getMessage(), ex);
+    }
+  }
 }
