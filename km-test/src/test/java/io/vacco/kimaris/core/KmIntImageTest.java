@@ -1,4 +1,4 @@
-package io.vacco.kimaris;
+package io.vacco.kimaris.core;
 
 import io.vacco.kimaris.impl.*;
 import j8spec.annotation.DefinedOrder;
