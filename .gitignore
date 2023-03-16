@@ -1,3 +1,7 @@
+datasets/caltech-10k-web-faces/data/
+datasets/license-plate/train
+datasets/snacks/data/
+
 build/
 
 gradle/
