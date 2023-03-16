@@ -27,8 +27,8 @@ for training.
 
 See test cases for example usage.
 
-- [Cascade training](./src/test/java/KmGenTest.java)
-- [Object detection](./src/test/java/KmDetTest.java)
+- [Cascade training](./src/test/java/impl/KmGenTest.java)
+- [Object detection](./src/test/java/impl/KmDetTest.java)
 
 ## Notes
 
