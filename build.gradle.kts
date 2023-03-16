@@ -10,8 +10,8 @@ configure<io.vacco.oss.gitflow.GsPluginProfileExtension> {
 }
 
 dependencies {
-  testImplementation("io.vacco.uvcj:uvc:0.0.6-MILESTONE-202302192329")
-  testImplementation("org.jcodec:jcodec-javase:0.2.5")
+  testImplementation("io.vacco.uvcj:uvc:0.0.6")
+  testImplementation("io.vacco.uvcj:uvc-jni-linux-x86_64:0.0.6")
   testImplementation("io.vacco.oruzka:oruzka:0.1.5.1")
   testImplementation("com.google.code.gson:gson:2.10.1")
 }

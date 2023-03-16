@@ -2,6 +2,8 @@
 
 [kimaris](https://en.wikipedia.org/wiki/Kimaris) is a Java implementation of Pixel Intensity Comparison-based Object detection.
 
+Requires Java 11 or later.
+
 Reference code is ported from [pico](https://github.com/nenadmarkus/pico).
 
 ## Installation

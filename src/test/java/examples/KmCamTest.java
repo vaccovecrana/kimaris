@@ -30,14 +30,10 @@ public class KmCamTest {
 
     private final KmImage ki = new KmImage();
 
-    private final KmRegion fr = KmRegion.detectDefault()
-      .withSizeMin(32)
-      .withSizeMax(720)
-      .withDetectMax(24)
-      .withDetectThreshold(4);
+    private final KmRegion fr = KmRegion.detectDefault().withDetectMax(24);
 
     private final KmRegion er = KmRegion.detectDefault()
-      .withDetectMax(32)
+      .withDetectMax(24)
       .withSizeMin(24)
       .withSizeMax(196)
       .withDetectThreshold(6);
@@ -49,18 +45,14 @@ public class KmCamTest {
       .withDetectThreshold(2);
 
     private final KmDet face = new KmDet(
-      KmCascades.loadPico(KmCamTest.class.getResource("/license-plate")), fr
+      KmCascades.loadPico(KmCamTest.class.getResource("/facefinder-pico")), fr
     );
 
     private final KmDet eyes = new KmDet(
       KmCascades.loadPico(KmCamTest.class.getResource("/puploc-java")), er
     );
 
-    private final KmDet faceMarks = new KmDet(
-      KmCascades.loadPico(KmCamTest.class.getResource("/face-markers")), mr
-    );
-
-    private final KmDet k0 = face; // .then(eyes); // , faceMarks);
+    private final KmDet k0 = face.then(eyes);
 
     public CamView() {
       setTitle(CamView.class.getCanonicalName());
@@ -140,21 +132,5 @@ public class KmCamTest {
       cv.setVisible(true);
     });
   }
-
-  /* TODO move this to another class.
-  static {
-    it("Processes pre-recorded video frames", () -> {
-      // Thread.sleep(30000);
-      var file = new File("./src/test/resources/seq-00.mp4");
-      var grab = FrameGrab.createFrameGrab(NIOUtils.readableChannel(file));
-      // var bge = new KmBgExtractor().withDefaultParams(new BufferedImage(512, 288, BufferedImage.TYPE_INT_ARGB));
-      var bge = new KmVibe().init(512, 288);
-      Picture picture;
-      while (null != (picture = grab.getNativeFrame())) {
-        bge.accept(AWTUtil.toBufferedImage(picture));
-      }
-    });
-  }
-   */
 
 }
