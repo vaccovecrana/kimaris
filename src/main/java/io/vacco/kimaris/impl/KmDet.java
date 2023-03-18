@@ -110,11 +110,11 @@ public class KmDet {
   public void processImage(KmImage img, KmBounds sub) {
     if (sub == null) { // full image scan
       kr.fitTo(img);
-      findObjects(kb, img, kr, 0, 0, img.height, img.width);
+      findObjects(kb, img, kr, 0, 0, img.height, img.width, true);
     } else { // sub-region scan
       int y0 = sub.r - (sub.s / 2);
       int x0 = sub.c - (sub.s / 2);
-      findObjects(kb, img, kr, y0, x0, y0 + sub.s, x0 + sub.s);
+      findObjects(kb, img, kr, y0, x0, y0 + sub.s, x0 + sub.s, true);
     }
     clusterDetections(kr);
     if (kr.detectCount > 0) {

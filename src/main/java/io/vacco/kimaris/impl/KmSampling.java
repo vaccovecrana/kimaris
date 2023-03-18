@@ -1,6 +1,7 @@
 package io.vacco.kimaris.impl;
 
 import io.vacco.kimaris.schema.*;
+import java.util.concurrent.*;
 
 import static io.vacco.kimaris.impl.KmMath.*;
 import static io.vacco.kimaris.impl.KmTrees.*;
@@ -171,28 +172,56 @@ public class KmSampling {
     return (float) out;
   }
 
-  public static void findObjects(KmBuffer kc, KmImage img, KmRegion reg,
-                                 int y0, int x0, int y1, int x1) {
-    float s = reg.sizeMin;
-    var bnd = bounds(0, 0, 0);
-    while (s <= reg.sizeMax) {
-      float r, c, dr, dc;
-      dr = dc = max(reg.stride * s, 1.0f);
-      for (r = y0 + (s / 2 + 1); r <= y1 - s / 2 - 1; r += dr) {
-        for (c = x0 + (s / 2 + 1); c <= x1 - s / 2 - 1; c += dc) {
-          var cl = classifyRegion(kc, bnd.withD(r, c, s), img);
-          if (cl.label == 1) {
-            if (reg.detectCount < reg.detectMax) {
-              reg.rcsq[4 * reg.detectCount] = r;
-              reg.rcsq[4 * reg.detectCount + 1] = c;
-              reg.rcsq[4 * reg.detectCount + 2] = s;
-              reg.rcsq[4 * reg.detectCount + 3] = cl.o;
-              reg.detectCount = reg.detectCount + 1;
-            }
+  public static void findObjects(KmBuffer kc, KmImage ki, KmRegion kr, KmBounds kb,
+                                 int y0, int x0, int y1, int x1, float s) {
+    float r, c, dr, dc;
+    dr = dc = max(kr.stride * s, 1.0f);
+    for (r = y0 + (s / 2 + 1); r <= y1 - s / 2 - 1; r += dr) {
+      for (c = x0 + (s / 2 + 1); c <= x1 - s / 2 - 1; c += dc) {
+        var cl = classifyRegion(kc, kb.withD(r, c, s), ki);
+        if (cl.label == 1) {
+          if (kr.detectCount < kr.detectMax) {
+            kr.rcsq[4 * kr.detectCount] = r;
+            kr.rcsq[4 * kr.detectCount + 1] = c;
+            kr.rcsq[4 * kr.detectCount + 2] = s;
+            kr.rcsq[4 * kr.detectCount + 3] = cl.o;
+            kr.detectCount = kr.detectCount + 1;
           }
         }
       }
-      s = reg.scale * s;
+    }
+  }
+
+  public static void findObjects(KmBuffer kc, KmImage ki, KmRegion kr,
+                                 int y0, int x0, int y1, int x1, boolean thread) {
+    var s = kr.sizeMin;
+    var bnd = bounds(0, 0, 0);
+    if (thread) {
+      int tasks = 0;
+      float s0 = s, s1 = s;
+      while (s0 <= kr.sizeMax) {
+        tasks = tasks + 1;
+        s0 = kr.scale * s0;
+      }
+      var cl = new CountDownLatch(tasks);
+      while (s1 <= kr.sizeMax) {
+        var fs1 = s1;
+        ForkJoinPool.commonPool().submit(() -> {
+          findObjects(kc, ki, kr, bounds(0, 0, 0), y0, x0, y1, x1, fs1);
+          cl.countDown();
+        });
+        s1 = kr.scale * s1;
+      }
+      try {
+        cl.await();
+      } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+      }
+    } else {
+      while (s <= kr.sizeMax) {
+        findObjects(kc, ki, kr, bnd, y0, x0, y1, x1, s);
+        s = kr.scale * s;
+      }
     }
   }
 
@@ -204,7 +233,7 @@ public class KmSampling {
       var img = images.get(i);
 
       kr.clearDetections();
-      findObjects(kc, img, kr, 0, 0, img.height, img.width);
+      findObjects(kc, img, kr, 0, 0, img.height, img.width, false);
 
       if (isDebugEnabled()) {
         debug(format("%s -> %d %d %d", img.imageId, kr.detectCount, smp.np, smp.nn));
