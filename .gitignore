@@ -1,5 +1,6 @@
+datasets/face-synthetics/dataset_100000/
 datasets/caltech-10k-web-faces/data/
-datasets/license-plate/train
+datasets/license-plate/train/
 datasets/snacks/data/
 
 build/

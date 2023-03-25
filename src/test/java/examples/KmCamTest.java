@@ -34,9 +34,9 @@ public class KmCamTest {
 
     private final KmRegion er = KmRegion.detectDefault()
       .withDetectMax(24)
-      .withSizeMin(24)
+      .withSizeMin(16)
       .withSizeMax(196)
-      .withDetectThreshold(6);
+      .withDetectThreshold(4);
 
     private final KmRegion mr = KmRegion.detectDefault()
       .withDetectMax(128)

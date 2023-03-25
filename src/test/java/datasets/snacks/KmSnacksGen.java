@@ -98,7 +98,7 @@ public class KmSnacksGen {
     var list = loadTrainingSet(targetSnack);
     var kr = new KmRand().smwcRand(KmMathTest.RSeed);
     var kcOut = new File("./src/test/resources", targetSnack);
-    var kc = KmGen.learnCascade(KmBoundBox.getDefault(), list, kr, reg);
+    var kc = KmGen.learnCascade(KmBoundBox.getDefault(), list, kr, reg, true);
     KmCascades.savePico(new FileOutputStream(kcOut), kc);
   }
 

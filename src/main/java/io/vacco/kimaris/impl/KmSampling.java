@@ -225,7 +225,7 @@ public class KmSampling {
     }
   }
 
-  public static KmSample searchForTrainingData(KmBuffer kc, KmImageList images, KmRand smpRnd, KmRegion kr, float subsf) {
+  public static KmSample searchForTrainingData(KmBuffer kc, KmImageList images, KmRand smpRnd, KmRegion kr, float subsf, boolean thread) {
     int n = 0;
     var smp = new KmSample();
 
@@ -233,7 +233,7 @@ public class KmSampling {
       var img = images.get(i);
 
       kr.clearDetections();
-      findObjects(kc, img, kr, 0, 0, img.height, img.width, false);
+      findObjects(kc, img, kr, 0, 0, img.height, img.width, thread);
 
       if (isDebugEnabled()) {
         debug(format("%s -> %d %d %d", img.imageId, kr.detectCount, smp.np, smp.nn));

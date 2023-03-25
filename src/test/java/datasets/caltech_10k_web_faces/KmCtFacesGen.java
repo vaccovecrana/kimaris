@@ -75,7 +75,7 @@ public class KmCtFacesGen {
     var kr = new KmRand().smwcRand(KmMathTest.RSeed);
     var kcOut = new File("./src/test/resources/facefinder-java");
     var reg = KmRegion.trainDefault();
-    var kc = KmGen.learnCascade(KmBoundBox.getDefault(), loadImages(), kr, reg);
+    var kc = KmGen.learnCascade(KmBoundBox.getDefault(), loadImages(), kr, reg, false);
     KmCascades.savePico(new FileOutputStream(kcOut), kc);
   }
 }

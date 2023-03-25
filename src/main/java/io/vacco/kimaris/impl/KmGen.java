@@ -75,7 +75,7 @@ public class KmGen {
     info(format("  ** threshold set to %f", threshold));
   }
 
-  public static KmBuffer learnCascade(KmBoundBox bb, KmImageList trainData, KmRand rootRnd, KmRegion reg) {
+  public static KmBuffer learnCascade(KmBoundBox bb, KmImageList trainData, KmRand rootRnd, KmRegion reg, boolean thread) {
 
     if (log == null) {
       System.out.println("=============================================================");
@@ -105,7 +105,7 @@ public class KmGen {
 
     for(int i = 0; i < KmConfig.TrainDataSearchIterations; ++i) {
       info("* scanning in progress");
-      smp = KmSampling.searchForTrainingData(kc, trainData, trainRnd, reg, subsf);
+      smp = KmSampling.searchForTrainingData(kc, trainData, trainRnd, reg, subsf, thread);
       info(format("* starting training with np=%d, nn=%d ...", smp.np, smp.nn));
       learnNewStage(
         kc, smp, rootRnd,
