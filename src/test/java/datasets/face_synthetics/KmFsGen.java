@@ -67,7 +67,7 @@ public class KmFsGen {
     KmConfig.MaxTreeDepth = 7;
 
     var marks = new KmFsMark[] {
-      eyeCorner
+      mouthCornerOut
     };
     for (var mark : marks) {
       var reg = KmRegion

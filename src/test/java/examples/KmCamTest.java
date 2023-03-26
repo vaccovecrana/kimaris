@@ -53,6 +53,15 @@ public class KmCamTest {
         .withDetectMax(16)
         .withSizeMin(16)
         .withSizeMax(96)
+        .withDetectThreshold(4)
+    );
+
+    private final KmDet mouthCornerOut = new KmDet(
+      KmCascades.loadPico(KmCamTest.class.getResource("/mouth-corner-out")),
+      KmRegion.detectDefault()
+        .withDetectMax(16)
+        .withSizeMin(16)
+        .withSizeMax(96)
     );
 
     private final Map<String, KmBounds> detections = new ConcurrentHashMap<>();
@@ -60,13 +69,17 @@ public class KmCamTest {
 
     private final KmEns ens = ens(face).withId("face")
       .then(
-        ens(eye, kb -> kb.shift(.5f, .3f).resize(0.5f)).withId("r-ey")
-          .then(ens(eyeCorner, kb -> kb.shift(.5f, .3f)).withId("r-ey-rc"))
-          .then(ens(eyeCorner, kb -> kb.shift(.5f, .7f)).withId("r-ey-lc"))
+        ens(eye, kb -> kb.shift(.5f, .3f).resize(.5f)).withId("r-ey")
+          .then(ens(eyeCorner, kb -> kb.shift(.5f, .2f).resize(.8f)).withId("r-ey-rc"))
+          .then(ens(eyeCorner, kb -> kb.shift(.5f, .7f).resize(.8f)).withId("r-ey-lc"))
       ).then(
-        ens(eye, kb -> kb.shift(.5f, .7f).resize(0.5f)).withId("ls-ey")
-          .then(ens(eyeCorner, kb -> kb.shift(.5f, .3f)).withId("l-ey-rc"))
-          .then(ens(eyeCorner, kb -> kb.shift(.5f, .7f)).withId("l-ey-lc"))
+        ens(eye, kb -> kb.shift(.5f, .7f).resize(.5f)).withId("ls-ey")
+          .then(ens(eyeCorner, kb -> kb.shift(.5f, .2f).resize(.8f)).withId("l-ey-rc"))
+          .then(ens(eyeCorner, kb -> kb.shift(.5f, .7f).resize(.8f)).withId("l-ey-lc"))
+      ).then(
+        ens(mouthCornerOut, kb -> kb.shift(.9f, .3f).resize(.5f)).withId("l-mc-out")
+      ).then(
+        ens(mouthCornerOut, kb -> kb.shift(.9f, .7f).resize(.5f)).withId("r-mc-out")
       );
 
     public CamView() {
@@ -92,29 +105,45 @@ public class KmCamTest {
       });
     }
 
-    private void drawDetections(Graphics2D g) {
-      g.setColor(Color.RED);
-      g.setFont(font);
-      g.setStroke(bs);
+    private void drawRawDetections(Graphics2D g) {
+      for (var e : detections.entrySet()) {
+        var r = e.getValue().r;
+        var c = e.getValue().c;
+        var s = e.getValue().s;
+        var rX = c + (s / 2);
+        var rY = r + (s / 2);
+        circle.setFrameFromCenter(c, r, rX, rY);
+        g.draw(circle);
+        g.drawOval(c, r, 2, 2);
+        g.drawString(String.format("[%s]", e.getKey()), rX, rY);
+      }
+    }
+
+    private void drawAvgDetections(Graphics2D g) {
       for (var e : averages.entrySet()) {
         var r = e.getValue().av0.val;
         var c = e.getValue().av1.val;
         var s = e.getValue().av2.val;
         var rX = c + (s / 2);
         var rY = r + (s / 2);
-        // circle.setFrameFromCenter(det.c, det.r, rX, rY);
-        // g.draw(circle);
         g.drawOval((int) c, (int) r, 2, 2);
         g.drawString(String.format("[%s]", e.getKey()), rX, rY);
-
       }
+    }
+
+    private void drawDetections(Graphics2D g) {
+      g.setColor(Color.RED);
+      g.setFont(font);
+      g.setStroke(bs);
+      // drawRawDetections(g);
+      drawAvgDetections(g);
     }
 
     public void updateCam(BufferedImage bi) {
       KmImages.setMeta(ki, bi, true);
       ens.run(ki, detections);
       for (var det : detections.values()) {
-        var avg = averages.computeIfAbsent(det.tag, t -> new KmAvg3F().init(3));
+        var avg = averages.computeIfAbsent(det.tag, t -> new KmAvg3F().init(4));
         avg.update(det);
       }
       SwingUtilities.invokeLater(() -> {
