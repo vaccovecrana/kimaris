@@ -9,7 +9,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
+import static io.vacco.kimaris.schema.KmEns.ens;
 import static io.vacco.uvc.Uvc.*;
 import static javax.swing.UIManager.*;
 
@@ -23,36 +26,48 @@ public class KmCamTest {
 
     private UvcCameraIO cio;
 
-    private final BasicStroke bs = new BasicStroke(4);
+    private final BasicStroke bs = new BasicStroke(2);
     private final BufferedImage bgi = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
     private final Ellipse2D circle = new Ellipse2D.Float();
-    private final Font font = new Font(Font.MONOSPACED, Font.ITALIC, 16);
+    private final Font font = new Font(Font.MONOSPACED, Font.ITALIC, 10);
 
     private final KmImage ki = new KmImage();
 
-    private final KmRegion fr = KmRegion.detectDefault().withDetectMax(24);
-
-    private final KmRegion er = KmRegion.detectDefault()
-      .withDetectMax(24)
-      .withSizeMin(16)
-      .withSizeMax(196)
-      .withDetectThreshold(4);
-
-    private final KmRegion mr = KmRegion.detectDefault()
-      .withDetectMax(128)
-      .withSizeMin(16)
-      .withSizeMax(64)
-      .withDetectThreshold(2);
-
     private final KmDet face = new KmDet(
-      KmCascades.loadPico(KmCamTest.class.getResource("/facefinder-pico")), fr
+      KmCascades.loadPico(KmCamTest.class.getResource("/facefinder-pico")),
+      KmRegion.detectDefault().withDetectMax(24)
     );
 
-    private final KmDet eyes = new KmDet(
-      KmCascades.loadPico(KmCamTest.class.getResource("/puploc-java")), er
+    private final KmDet eye = new KmDet(
+      KmCascades.loadPico(KmCamTest.class.getResource("/puploc")),
+      KmRegion.detectDefault()
+        .withDetectMax(8)
+        .withSizeMin(16)
+        .withSizeMax(196)
+        .withDetectThreshold(4)
     );
 
-    private final KmDet k0 = face.then(eyes);
+    private final KmDet eyeCorner = new KmDet(
+      KmCascades.loadPico(KmCamTest.class.getResource("/eye-corner")),
+      KmRegion.detectDefault()
+        .withDetectMax(16)
+        .withSizeMin(16)
+        .withSizeMax(96)
+    );
+
+    private final Map<String, KmBounds> detections = new ConcurrentHashMap<>();
+    private final Map<String, KmAvg3F> averages = new ConcurrentHashMap<>();
+
+    private final KmEns ens = ens(face).withId("face")
+      .then(
+        ens(eye, kb -> kb.shift(.5f, .3f).resize(0.5f)).withId("r-ey")
+          .then(ens(eyeCorner, kb -> kb.shift(.5f, .3f)).withId("r-ey-rc"))
+          .then(ens(eyeCorner, kb -> kb.shift(.5f, .7f)).withId("r-ey-lc"))
+      ).then(
+        ens(eye, kb -> kb.shift(.5f, .7f).resize(0.5f)).withId("ls-ey")
+          .then(ens(eyeCorner, kb -> kb.shift(.5f, .3f)).withId("l-ey-rc"))
+          .then(ens(eyeCorner, kb -> kb.shift(.5f, .7f)).withId("l-ey-lc"))
+      );
 
     public CamView() {
       setTitle(CamView.class.getCanonicalName());
@@ -77,26 +92,31 @@ public class KmCamTest {
       });
     }
 
-    private void drawDetections(KmRegion kr, Graphics2D g) {
+    private void drawDetections(Graphics2D g) {
       g.setColor(Color.RED);
       g.setFont(font);
       g.setStroke(bs);
-      for (int i = 0; i < kr.detections.length; i++) {
-        var det = kr.detections[i];
-        if (det != null && det.isValid()) {
-          var rX = det.c + (det.s / 2);
-          var rY = det.r + (det.s / 2);
-          circle.setFrameFromCenter(det.c, det.r, rX, rY);
-          g.draw(circle);
-          g.drawOval(det.c, det.r, 2, 2);
-          g.drawString(String.format("[%d]", i), rX, rY);
-        }
+      for (var e : averages.entrySet()) {
+        var r = e.getValue().av0.val;
+        var c = e.getValue().av1.val;
+        var s = e.getValue().av2.val;
+        var rX = c + (s / 2);
+        var rY = r + (s / 2);
+        // circle.setFrameFromCenter(det.c, det.r, rX, rY);
+        // g.draw(circle);
+        g.drawOval((int) c, (int) r, 2, 2);
+        g.drawString(String.format("[%s]", e.getKey()), rX, rY);
+
       }
     }
 
     public void updateCam(BufferedImage bi) {
       KmImages.setMeta(ki, bi, true);
-      k0.processImage(ki, null);
+      ens.run(ki, detections);
+      for (var det : detections.values()) {
+        var avg = averages.computeIfAbsent(det.tag, t -> new KmAvg3F().init(3));
+        avg.update(det);
+      }
       SwingUtilities.invokeLater(() -> {
         var g = bgi.createGraphics();
         g.setBackground(Color.BLUE);
@@ -104,9 +124,7 @@ public class KmCamTest {
         g.setColor(Color.BLUE);
         g.fillRect(0, 0, w, h);
         g.drawImage(bi, 0, 0, null);
-        drawDetections(fr, g);
-        drawDetections(er, g);
-        drawDetections(mr, g);
+        drawDetections(g);
         g.dispose();
       });
       repaint();

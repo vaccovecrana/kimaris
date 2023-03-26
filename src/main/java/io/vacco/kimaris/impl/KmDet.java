@@ -10,7 +10,6 @@ public class KmDet {
 
   private final KmBuffer kb;
   public  final KmRegion kr;
-  private       KmDet[] next;
 
   public KmDet(KmBuffer kb, KmRegion kr) {
     this.kb = Objects.requireNonNull(kb);
@@ -102,11 +101,6 @@ public class KmDet {
     Arrays.fill(reg.rcsq, 0);
   }
 
-  public KmDet then(KmDet ... next) {
-    this.next = Objects.requireNonNull(next);
-    return this;
-  }
-
   public void processImage(KmImage img, KmBounds sub) {
     if (sub == null) { // full image scan
       kr.fitTo(img);
@@ -117,17 +111,6 @@ public class KmDet {
       findObjects(kb, img, kr, y0, x0, y0 + sub.s, x0 + sub.s, true);
     }
     clusterDetections(kr);
-    if (kr.detectCount > 0) {
-      if (this.next != null && this.next.length > 0) {
-        for (var det : kr.detections) {
-          if (det != null && det.isValid()) {
-            for (var nd : next) {
-              nd.processImage(img, det);
-            }
-          }
-        }
-      }
-    }
   }
 
 }

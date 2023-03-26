@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import javax.imageio.ImageIO;
 import java.util.*;
 
+import static io.vacco.kimaris.schema.KmEns.ens;
 import static j8spec.J8Spec.*;
 import static org.junit.Assert.*;
 
@@ -15,12 +16,11 @@ import static org.junit.Assert.*;
 @RunWith(J8SpecRunner.class)
 public class KmDetTest {
 
-  public static void testFrame(KmDet det, KmRegion fr, KmRegion pr, KmImage ki) {
+  public static void testFrame(KmEns ens, KmImage ki, Map<String, KmBounds> dets) {
     System.out.println("================");
-    det.processImage(ki, null);
-    assertEquals(1, fr.detectCount);
-    System.out.println("  face: " + Arrays.toString(fr.detections));
-    System.out.println("  eyes: " + Arrays.toString(pr.detections));
+    ens.run(ki, dets);
+    assertEquals(3, dets.size());
+    System.out.println(dets);
   }
 
   static {
@@ -47,11 +47,15 @@ public class KmDetTest {
 
       var fd = new KmDet(KmCascades.loadPico(KmDetTest.class.getResource("/facefinder-pico")), fr);
       var pd = new KmDet(KmCascades.loadPico(KmDetTest.class.getResource("/puploc-java")), pr);
-      var det = fd.then(pd);
 
-      testFrame(det, fr, pr, ki0);
-      testFrame(det, fr, pr, ki1);
-      testFrame(det, fr, pr, ki2);
+      var dets = new TreeMap<String, KmBounds>();
+      var ens = ens(fd).withId("face")
+        .then(ens(pd, kb -> kb.shift(.5f, .3f).resize(0.5f)).withId("left-eye"))
+        .then(ens(pd, kb -> kb.shift(.5f, .7f).resize(0.5f)).withId("right-eye"));
+
+      testFrame(ens, ki0, dets);
+      testFrame(ens, ki1, dets);
+      testFrame(ens, ki2, dets);
 
       System.out.println();
     });

@@ -44,9 +44,26 @@ public class KmBounds {
     return this;
   }
 
+  public KmBounds shift(float rs, float cs) {
+    int ry0 = r - (s / 2), ry1 = r + (s / 2), rsl = ry1 - ry0;
+    int cy0 = c - (s / 2), cy1 = c + (s / 2), csl = cy1 - cy0;
+    this.r = (int) (ry0 + rsl * rs);
+    this.c = (int) (cy0 + csl * cs);
+    return this;
+  }
+
+  public KmBounds resize(float ss) {
+    this.s = (int) (s * ss);
+    return this;
+  }
+
   public static KmBounds bounds(double r, double c, double s) {
     var b = new KmBounds();
     return b.with((int) r, (int) c, (int) s);
+  }
+
+  public static KmBounds bounds() {
+    return bounds(0, 0, 0);
   }
 
   public String id() {
