@@ -39,7 +39,7 @@ public class KmCamTest {
     );
 
     private final KmDet eye = new KmDet(
-      KmCascades.loadPico(KmCamTest.class.getResource("/puploc")),
+      KmCascades.loadPico(KmCamTest.class.getResource("/eye")),
       KmRegion.detectDefault()
         .withDetectMax(8)
         .withSizeMin(16)
@@ -53,6 +53,15 @@ public class KmCamTest {
         .withDetectMax(16)
         .withSizeMin(16)
         .withSizeMax(96)
+        .withDetectThreshold(4)
+    );
+
+    private final KmDet eyePup = new KmDet(
+      KmCascades.loadPico(KmCamTest.class.getResource("/puploc-java")),
+      KmRegion.detectDefault()
+        .withDetectMax(8)
+        .withSizeMin(16)
+        .withSizeMax(196)
         .withDetectThreshold(4)
     );
 
@@ -70,10 +79,12 @@ public class KmCamTest {
     private final KmEns ens = ens(face).withId("face")
       .then(
         ens(eye, kb -> kb.shift(.5f, .3f).resize(.5f)).withId("r-ey")
+          .then(ens(eyePup, kb -> kb.shift(.5f, .5f).resize(1)).withId("r-ey-pup"))
           .then(ens(eyeCorner, kb -> kb.shift(.5f, .2f).resize(.8f)).withId("r-ey-rc"))
           .then(ens(eyeCorner, kb -> kb.shift(.5f, .7f).resize(.8f)).withId("r-ey-lc"))
       ).then(
         ens(eye, kb -> kb.shift(.5f, .7f).resize(.5f)).withId("ls-ey")
+          .then(ens(eyePup, kb -> kb.shift(.5f, .5f).resize(1)).withId("l-ey-pup"))
           .then(ens(eyeCorner, kb -> kb.shift(.5f, .2f).resize(.8f)).withId("l-ey-rc"))
           .then(ens(eyeCorner, kb -> kb.shift(.5f, .7f).resize(.8f)).withId("l-ey-lc"))
       ).then(
