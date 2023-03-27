@@ -18,9 +18,9 @@ import static java.lang.Float.parseFloat;
 
 public class KmFsGen {
 
-  public static KmFsMark eye  = mark("eye", 24, 64, 1.08f, 69, 70);
-  public static KmFsMark eyeCorner = mark("eye-corner", 12, 48, 1.1f, 37, 40, 43, 46);
-  public static KmFsMark mouthCornerOut = mark("mouth-corner-out", 16, 48, 1.08f, 49, 55);
+  public static KmFsMark eye  = mark("eye", 24, 64, 6, 16, 1.08f, 69, 70);
+  public static KmFsMark eyeCorner = mark("eye-corner", 16, 64, 10, 24, 1.05f, 37, 40, 43, 46);
+  public static KmFsMark mouthCornerOut = mark("mouth-corner-out", 16, 48, 6, 16, 1.08f, 49, 55);
 
   public static KmImage from(File imgFile, KmFsMark mark) {
     return OFnSupplier.tryGet(() -> {
@@ -63,13 +63,12 @@ public class KmFsGen {
 
   public static void main(String[] args) throws FileNotFoundException {
     KmLogging.withLog(new KmTestLog());
-    KmConfig.MaxTreesPerStage = 24;
-    KmConfig.MaxTreeDepth = 9;
-
     var marks = new KmFsMark[] {
       eyeCorner
     };
     for (var mark : marks) {
+      KmConfig.MaxTreesPerStage = mark.maxTreesPerStage;
+      KmConfig.MaxTreeDepth = mark.maxTreeDepth;
       var reg = KmRegion
         .trainDefault()
         .withSizeMin(mark.sizeMin)
@@ -77,7 +76,7 @@ public class KmFsGen {
         .withScale(mark.trainScale);
       var kr = new KmRand().smwcRand(KmMathTest.RSeed);
       var kcOut = new File("./src/test/resources", mark.cascadeName);
-      var kc = KmGen.learnCascade(KmBoundBox.getDefault(), loadImages(mark, 12_000), kr, reg, true);
+      var kc = KmGen.learnCascade(KmBoundBox.getDefault(), loadImages(mark, 512), kr, reg, true);
       KmCascades.savePico(new FileOutputStream(kcOut), kc);
     }
   }
