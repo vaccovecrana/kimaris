@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 import javax.imageio.ImageIO;
 import java.util.*;
 
-import static io.vacco.kimaris.schema.KmEns.ens;
+import static io.vacco.kimaris.impl.KmEns.ens;
 import static j8spec.J8Spec.*;
 import static org.junit.Assert.*;
 

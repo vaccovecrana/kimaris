@@ -1,6 +1,6 @@
-package io.vacco.kimaris.schema;
+package io.vacco.kimaris.impl;
 
-import io.vacco.kimaris.impl.KmDet;
+import io.vacco.kimaris.schema.*;
 import java.util.function.Function;
 import java.util.*;
 

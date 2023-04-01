@@ -12,7 +12,7 @@ import java.awt.image.BufferedImage;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static io.vacco.kimaris.schema.KmEns.ens;
+import static io.vacco.kimaris.impl.KmEns.ens;
 import static io.vacco.uvc.Uvc.*;
 import static javax.swing.UIManager.*;
 
