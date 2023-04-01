@@ -70,7 +70,10 @@ public class KmGenTest {
       var jsonOut = new File("./build/facefinder.json");
 
       var reg = KmRegion.trainDefault();
-      var kc = KmGen.learnCascade(KmBoundBox.getDefault(), wfTiny, kr, reg, false);
+      var kc = KmGen.learnCascade(
+        KmBoundBox.getDefault(), wfTiny, kr, reg,
+        KmConfig.MaxTreesPerStage, KmConfig.MaxTreeDepth, false
+      );
       var kb = KmCascades.loadFrom(kc);
       var kc0 = KmCascades.loadFrom(kb);
 

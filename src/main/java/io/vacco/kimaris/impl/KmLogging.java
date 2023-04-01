@@ -6,6 +6,7 @@ public class KmLogging {
 
   public interface KmLog {
     void info(String msg);
+    boolean isInfoEnabled();
     void debug(String msg);
     boolean isDebugEnabled();
     void trace(String msg);
@@ -34,6 +35,10 @@ public class KmLogging {
     if (log != null) {
       log.trace(msg);
     }
+  }
+
+  public static boolean isInfoEnabled() {
+    return log != null && log.isInfoEnabled();
   }
 
   public static boolean isDebugEnabled() {

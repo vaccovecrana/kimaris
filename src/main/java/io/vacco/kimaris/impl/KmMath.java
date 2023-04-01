@@ -22,6 +22,10 @@ public class KmMath {
     );
   }
 
+  public static double eclDist(KmPoint p0, KmPoint p1) {
+    return eclDist(p0.x, p0.y, p1.x, p1.y);
+  }
+
   public static KmBounds boundsFrom(double xMin, double yMin,
                                     double xMax, double yMax) {
     double r = yMin + (yMax - yMin) / 2;

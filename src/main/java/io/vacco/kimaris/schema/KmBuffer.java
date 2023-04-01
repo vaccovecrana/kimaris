@@ -28,6 +28,8 @@ public class KmBuffer {
   public transient float[] tVals;
   public transient float[] os;
 
+  public transient KmSample trainSmp;
+
   public KmBuffer initForDetection(int treeDepth, KmBoundBox bb) {
     this.boundBox = Objects.requireNonNull(bb);
     this.treeDepth = treeDepth;

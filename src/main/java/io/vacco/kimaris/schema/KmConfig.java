@@ -26,7 +26,7 @@ public class KmConfig {
 
   public static int Kb0 = 4096, Kb1 = 1024, NRands = 128;
 
-  public static int TrainMaxObjects = 1_048_576;
+  public static int TrainMaxObjects = 4_194_304;
   public static int TrainDataSearchIterations = 5;
 
   public static float TrainTpAssignThreshold = 0.4f;

@@ -69,7 +69,10 @@ public class KmCtPuplocGen {
     var reg = KmRegion.trainDefault().withSizeMin(24).withSizeMax(384);
     var kr = new KmRand().smwcRand(KmMathTest.RSeed);
     var kcOut = new File("./src/test/resources/puploc-java");
-    var kc = KmGen.learnCascade(KmBoundBox.getDefault(), loadImages(), kr, reg, true);
+    var kc = KmGen.learnCascade(
+      KmBoundBox.getDefault(), loadImages(), kr, reg,
+      KmConfig.MaxTreesPerStage, KmConfig.MaxTreeDepth, true
+    );
     KmCascades.savePico(new FileOutputStream(kcOut), kc);
   }
 }

@@ -26,7 +26,7 @@ public class KmCamTest {
 
     private UvcCameraIO cio;
 
-    private final BasicStroke bs = new BasicStroke(2);
+    private final BasicStroke bs = new BasicStroke(1);
     private final BufferedImage bgi = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
     private final Ellipse2D circle = new Ellipse2D.Float();
     private final Font font = new Font(Font.MONOSPACED, Font.ITALIC, 10);
@@ -47,13 +47,13 @@ public class KmCamTest {
         .withDetectThreshold(4)
     );
 
-    private final KmDet eyeCorner = new KmDet(
-      KmCascades.loadPico(KmCamTest.class.getResource("/eye-corner")),
+    private final KmDet eyeCornerIn = new KmDet(
+      KmCascades.loadPico(KmCamTest.class.getResource("/eye-corner-in")),
       KmRegion.detectDefault()
         .withDetectMax(16)
         .withSizeMin(16)
-        .withSizeMax(96)
-        .withDetectThreshold(4)
+        .withSizeMax(64)
+        .withDetectThreshold(2)
     );
 
     private final KmDet eyePup = new KmDet(
@@ -80,13 +80,11 @@ public class KmCamTest {
       .then(
         ens(eye, kb -> kb.shift(.5f, .3f).resize(.5f)).withId("r-ey")
           .then(ens(eyePup, kb -> kb.shift(.5f, .5f).resize(1)).withId("r-ey-pup"))
-          .then(ens(eyeCorner, kb -> kb.shift(.5f, .2f).resize(.8f)).withId("r-ey-rc"))
-          .then(ens(eyeCorner, kb -> kb.shift(.5f, .7f).resize(.8f)).withId("r-ey-lc"))
+          .then(ens(eyeCornerIn, kb -> kb.shift(.5f, .7f).resize(.7f)).withId("r-ec-in"))
       ).then(
-        ens(eye, kb -> kb.shift(.5f, .7f).resize(.5f)).withId("ls-ey")
+        ens(eye, kb -> kb.shift(.5f, .7f).resize(.5f)).withId("l-ey")
           .then(ens(eyePup, kb -> kb.shift(.5f, .5f).resize(1)).withId("l-ey-pup"))
-          .then(ens(eyeCorner, kb -> kb.shift(.5f, .2f).resize(.8f)).withId("l-ey-rc"))
-          .then(ens(eyeCorner, kb -> kb.shift(.5f, .7f).resize(.8f)).withId("l-ey-lc"))
+          .then(ens(eyeCornerIn, kb -> kb.shift(.5f, .3f).resize(.7f)).withId("l-ec-in"))
       ).then(
         ens(mouthCornerOut, kb -> kb.shift(.9f, .3f).resize(.5f)).withId("l-mc-out")
       ).then(
@@ -137,6 +135,8 @@ public class KmCamTest {
         var s = e.getValue().av2.val;
         var rX = c + (s / 2);
         var rY = r + (s / 2);
+        circle.setFrameFromCenter(c, r, rX, rY);
+        g.draw(circle);
         g.drawOval((int) c, (int) r, 2, 2);
         g.drawString(String.format("[%s]", e.getKey()), rX, rY);
       }

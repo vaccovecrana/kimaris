@@ -42,7 +42,10 @@ public class KmLicensePlateGen {
     var kr = new KmRand().smwcRand(KmMathTest.RSeed);
     var kcOut = new File("./src/test/resources/license-plate");
     var reg = KmRegion.trainDefault();
-    var kc = KmGen.learnCascade(KmBoundBox.getDefault(), kl, kr, reg, true);
+    var kc = KmGen.learnCascade(
+      KmBoundBox.getDefault(), kl, kr, reg,
+      KmConfig.MaxTreesPerStage, KmConfig.MaxTreeDepth, true
+    );
     KmCascades.savePico(new FileOutputStream(kcOut), kc);
   }
 

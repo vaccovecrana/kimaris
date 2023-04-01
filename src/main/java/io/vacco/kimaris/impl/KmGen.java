@@ -16,7 +16,9 @@ public class KmGen {
     double wsum;
     float threshold = 0, tpr, fpr = 1.0f;
 
-    info("* learning a new stage");
+    if (isInfoEnabled()) {
+      info("* learning a new stage");
+    }
 
     maxTreesPerStage = kc.nTrees + maxTreesPerStage;
 
@@ -67,15 +69,20 @@ public class KmGen {
         fpr = numFps / (float) smp.nn;
       } while (tpr < minTpr);
 
-      info(format("  ** tree %d ... stage tpr=%f, stage fpr=%f", kc.nTrees, tpr, fpr));
+      if (isInfoEnabled()) {
+        info(format("  ** tree %d ... stage tpr=%f, stage fpr=%f", kc.nTrees, tpr, fpr));
+      }
     }
 
     kc.thresholds[kc.nTrees - 1] = threshold;
 
-    info(format("  ** threshold set to %f", threshold));
+    if (isInfoEnabled()) {
+      info(format("  ** threshold set to %f", threshold));
+    }
   }
 
-  public static KmBuffer learnCascade(KmBoundBox bb, KmImageList trainData, KmRand rootRnd, KmRegion reg, boolean thread) {
+  public static KmBuffer learnCascade(KmBoundBox bb, KmImageList trainData, KmRand rootRnd, KmRegion reg,
+                                      int maxTreePerStage, int maxTreeDepth, boolean thread) {
 
     if (log == null) {
       System.out.println("=============================================================");
@@ -86,7 +93,7 @@ public class KmGen {
     KmImages.restore(trainData);
 
     var kc = new KmBuffer()
-      .initForDetection(KmConfig.MaxTreeDepth, bb)
+      .initForDetection(maxTreeDepth, bb)
       .initForTraining();
     var stageRnd = new KmRand().smwcRand(new long[] {rootRnd.mwcrand()});
 
@@ -97,27 +104,39 @@ public class KmGen {
       if(smp.eFpr < KmConfig.FprThreshold) {
         break;
       }
-      learnNewStage(kc, smp, rootRnd, KmConfig.StageTpr, KmConfig.StageFpr, KmConfig.MaxTreesPerStage);
+      learnNewStage(kc, smp, rootRnd, KmConfig.StageTpr, KmConfig.StageFpr, maxTreePerStage);
     }
 
     float subsf = KmConfig.TrainFpAssignThreshold;
     var trainRnd = new KmRand().smwcRand(new long[] { rootRnd.mwcrand() });
 
-    for(int i = 0; i < KmConfig.TrainDataSearchIterations; ++i) {
-      info("* scanning in progress");
+    for(int i = 0; i < KmConfig.TrainDataSearchIterations; i++) {
+      if (isInfoEnabled()) {
+        info("* scanning in progress");
+      }
       smp = KmSampling.searchForTrainingData(kc, trainData, trainRnd, reg, subsf, thread);
-      info(format("* starting training with np=%d, nn=%d ...", smp.np, smp.nn));
+
+      if (smp.np == 0 && smp.nn == 0) {
+        throw new IllegalStateException("Unable to find training data with current configuration. Stopping.");
+      }
+
+      if (isInfoEnabled()) {
+        info(format("* iteration %d starting training with np=%d, nn=%d ...", i, smp.np, smp.nn));
+      }
+
       learnNewStage(
         kc, smp, rootRnd,
         KmConfig.StageTpr * KmConfig.StageTpr,
         KmConfig.StageFpr * KmConfig.StageFpr,
         KmConfig.MaxTreesPerStage
       );
-      KmSampling.sampleTrainingData(kc, trainData, stageRnd); // estimating FPR for random sampling
+      kc.trainSmp = KmSampling.sampleTrainingData(kc, trainData, stageRnd); // estimating FPR for random sampling
       subsf *= 3;
     }
 
-    info("* learning process finished");
+    if (isInfoEnabled()) {
+      info("* learning process finished");
+    }
 
     return kc;
   }

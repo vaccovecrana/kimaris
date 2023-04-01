@@ -98,9 +98,11 @@ public class KmSampling {
     smp.eTpr = smp.np / (float) objects.size();
     smp.eFpr = (float) (smp.nn / (double) nw);
 
-    info("\n* sampling finished");
-    info(format("  ** cascade TPR=%.8f", smp.eTpr));
-    info(format("  ** cascade FPR=%.8f (%d/%d)", smp.eFpr, smp.nn, nw));
+    if (isInfoEnabled()) {
+      info("\n* sampling finished");
+      info(format("  ** cascade TPR=%.8f", smp.eTpr));
+      info(format("  ** cascade FPR=%.8f (%d/%d)", smp.eFpr, smp.nn, nw));
+    }
 
     return smp;
   }
