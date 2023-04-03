@@ -99,7 +99,7 @@ public class KmFsGen {
   }
 
   public static void main(String[] args) {
-    var mk = KmIBugMark.MouthCornerOut;
+    var mk = KmIBugMark.EyePup;
     var images = loadImages(mk, 8192).updateSizeRange();
 
     KmLogging.withLog(new KmTestLog().withLogInfo(true));

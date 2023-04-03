@@ -5,7 +5,7 @@ import static datasets.face_synthetics.KmIBugPt.*;
 
 public enum KmIBugMark {
 
-  EyePup(9, 20, 1.5f, new int[] {3, 4}, "eye-pup", IB69, IB70), // TODO ok, just needs more training data.
+  EyePup(8, 20, 1.1f, new int[] {3, 4}, "eye-pup", IB69, IB70), // TODO ok, just needs more training data.
   EyeCornerIn(9, 20, 1.25f, new int[] {3, 4}, "eye-corner-in", IB40, IB43), // TODO ok, just needs more training data.
   EyeCornerOut(9, 20, 1.20f, new int[] {3, 4}, "eye-corner-out", IB37, IB46), // TODO ok, just needs more training data.
 
