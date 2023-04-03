@@ -1,5 +1,6 @@
 package examples;
 
+import datasets.face_synthetics.KmFsEnsemble;
 import io.vacco.kimaris.impl.*;
 import io.vacco.kimaris.schema.*;
 import io.vacco.uvc.*;
@@ -11,7 +12,6 @@ import java.awt.image.BufferedImage;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static io.vacco.kimaris.impl.KmEns.ens;
 import static io.vacco.uvc.Uvc.*;
 
 public class KmCamTest {
@@ -30,62 +30,10 @@ public class KmCamTest {
     private final Font font = new Font(Font.MONOSPACED, Font.ITALIC, 10);
 
     private final KmImage ki = new KmImage();
-
-    private final KmDet face = new KmDet(
-      KmCascades.loadPico(KmCamTest.class.getResource("/facefinder-pico")),
-      KmRegion.detectDefault().withDetectMax(24)
-    );
-
-    private final KmDet eyePup = new KmDet(
-      KmCascades.loadPico(KmCamTest.class.getResource("/eye-pup")),
-      KmRegion.detectDefault()
-        .withDetectMax(8)
-        .withSizeMin(16)
-        .withSizeMax(196)
-        .withDetectThreshold(4)
-    );
-
-    private final KmDet eyeCornerIn = new KmDet(
-      KmCascades.loadPico(KmCamTest.class.getResource("/eye-corner-in")),
-      KmRegion.detectDefault()
-        .withDetectMax(8)
-        .withSizeMin(16)
-        .withSizeMax(64)
-        .withDetectThreshold(3)
-    );
-
-    private final KmDet eyeCornerOut = new KmDet(
-      KmCascades.loadPico(KmCamTest.class.getResource("/eye-corner-out")),
-      KmRegion.detectDefault()
-        .withDetectMax(8)
-        .withSizeMin(16)
-        .withSizeMax(64)
-        .withDetectThreshold(3)
-    );
-
-    private final KmDet mouthCornerOut = new KmDet(
-      KmCascades.loadPico(KmCamTest.class.getResource("/mouth-corner-out")),
-      KmRegion.detectDefault()
-        .withDetectMax(16)
-        .withSizeMin(16)
-        .withSizeMax(96)
-    );
+    private final KmFsEnsemble face = new KmFsEnsemble();
 
     private final Map<String, KmBounds> detections = new ConcurrentHashMap<>();
     private final Map<String, KmAvg3F> averages = new ConcurrentHashMap<>();
-
-    private final KmEns ens = ens(face).withId("face")
-      .then(ens(eyePup, kb -> kb.shift(.4f, .3f).resize(.5f)).withId("r-ey"))
-      .then(ens(eyeCornerIn, kb -> kb.shift(.4f, .4f).resize(.25f)).withId("r-ec-in"))
-      .then(ens(eyeCornerOut, kb -> kb.shift(.4f, .2f).resize(.25f)).withId("r-ec-ou"))
-      .then(ens(eyePup, kb -> kb.shift(.4f, .7f).resize(.5f)).withId("l-ey"))
-      .then(ens(eyeCornerIn, kb -> kb.shift(.4f, .6f).resize(.25f)).withId("l-ec-in"))
-      .then(ens(eyeCornerOut, kb -> kb.shift(.4f, .8f).resize(.25f)).withId("l-ec-ou"))
-      .then(
-        ens(mouthCornerOut, kb -> kb.shift(.95f, .3f).resize(.4f)).withId("l-mc-out")
-      ).then(
-        ens(mouthCornerOut, kb -> kb.shift(.95f, .7f).resize(.4f)).withId("r-mc-out")
-      );
 
     public CamView() {
       setTitle(CamView.class.getCanonicalName());
@@ -148,9 +96,9 @@ public class KmCamTest {
 
     public void updateCam(BufferedImage bi) {
       KmImages.setMeta(ki, bi, true);
-      ens.run(ki, detections);
+      face.ens.run(ki, detections);
       for (var det : detections.values()) {
-        var avg = averages.computeIfAbsent(det.tag, t -> new KmAvg3F().init(12));
+        var avg = averages.computeIfAbsent(det.tag, t -> new KmAvg3F().init(6));
         avg.update(det);
       }
       SwingUtilities.invokeLater(() -> {

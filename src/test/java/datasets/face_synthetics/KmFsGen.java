@@ -100,7 +100,7 @@ public class KmFsGen {
 
   public static void main(String[] args) {
     var mk = KmIBugMark.MouthCornerOut;
-    var images = loadImages(mk, 2048).updateSizeRange();
+    var images = loadImages(mk, 8192).updateSizeRange();
 
     KmLogging.withLog(new KmTestLog().withLogInfo(true));
     var kc = train(mk.maxTreesPerStage, mk.maxTreeDepth, mk.trainScale, images, true);
