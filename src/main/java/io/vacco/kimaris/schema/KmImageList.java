@@ -19,6 +19,9 @@ public class KmImageList extends ArrayList<KmImage> {
       .flatMap(img -> img.objects.stream())
       .mapToInt(obj -> obj.bounds.s)
       .max().ifPresent(sm -> this.sizeMax = sm);
+    if (sizeMin == 0 || sizeMax == 0) {
+      throw new IllegalStateException("Region min size cannot be zero");
+    }
     return this;
   }
 

@@ -17,6 +17,9 @@ import static java.util.stream.Collectors.toList;
 
 public class KmFsGen {
 
+  public static final int segmentationPixelAreaThreshold = 32; // min class pixels for sampling
+  public static final int minObjectSize = 16;
+
   public static File[] faceSynthetics() {
     return Objects.requireNonNull(
       new File("./datasets/face-synthetics/dataset_100000")
@@ -39,14 +42,13 @@ public class KmFsGen {
       var segImg = ImageIO.read(segImgFile);
       var segBuf = ((DataBufferByte) segImg.getData().getDataBuffer()).getData();
       var classes = new int[24];
-      var th = 16; // at least 16 class pixels for sampling
       for (byte b : segBuf) {
         if (b > 0) {
           classes[b] = classes[b] + 1;
         }
       }
       for (int mkc : mark.requiredClasses) {
-        if (classes[mkc] < th) {
+        if (classes[mkc] < segmentationPixelAreaThreshold) {
           return false;
         }
       }
@@ -69,24 +71,36 @@ public class KmFsGen {
   public static KmImageList loadImages(KmIBugMark mark, int limit) {
     var images = faceSynthetics();
     var fl = Arrays.stream(images).collect(toList());
-    var il = 0;
+    var ik = 0;
     var kil = new KmImageList();
     Collections.shuffle(fl);
     var it = fl.iterator();
-    while (il < limit) {
+    while (ik < limit) {
       var img = it.next();
       var segF = new File(img.getParentFile(), img.getName().replace(".png", "_seg.png"));
       if (hasSegmentationClasses(segF, mark)) {
-        kil.add(from(img, mark));
-        il = il + 1;
+        var ki = from(img, mark);
+        var badObj = ki.objects.stream().filter(obj -> obj.bounds.s < minObjectSize).findFirst();
+        if (badObj.isEmpty()) {
+          kil.add(ki);
+          ik = ik + 1;
+          System.out.print("+");
+          if (ik % 100 == 0) {
+            System.out.printf(" %08d%n", ik);
+          }
+        }
       }
     }
+    System.out.println();
     return kil;
   }
 
   public static KmBuffer train(int maxTreesPerStage, int maxTreeDepth, float trainScale,
                                KmImageList images, boolean thread) {
-    System.out.printf("Training with [%d] images%n", images.size());
+    System.out.printf(
+      "Training with [%d] images, sizeMin [%d], sizeMax [%d]%n",
+      images.size(), images.sizeMin, images.sizeMax
+    );
     var reg = KmRegion
       .trainDefault()
       .withSizeMin(images.sizeMin)
@@ -101,7 +115,7 @@ public class KmFsGen {
 
   public static void main(String[] args) {
     var mk = KmIBugMark.EyePup;
-    var images = loadImages(mk, 32768).updateSizeRange();
+    var images = loadImages(mk, 16384).updateSizeRange();
 
     KmLogging.withLog(new KmTestLog().withLogInfo(true));
     var kc = train(mk.maxTreesPerStage, mk.maxTreeDepth, mk.trainScale, images, true);
