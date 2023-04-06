@@ -2,7 +2,8 @@ package datasets.face_synthetics;
 
 import examples.KmCamTest;
 import io.vacco.kimaris.impl.*;
-import io.vacco.kimaris.schema.KmRegion;
+import io.vacco.kimaris.util.KmAvg3F;
+import io.vacco.kimaris.schema.*;
 
 import static io.vacco.kimaris.impl.KmEns.ens;
 
@@ -18,7 +19,7 @@ public class KmFsEnsemble {
     KmRegion.detectDefault()
       .withDetectMax(8)
       .withSizeMin(16)
-      .withSizeMax(196)
+      .withSizeMax(128)
       .withDetectThreshold(4)
   );
 
@@ -27,7 +28,7 @@ public class KmFsEnsemble {
     KmRegion.detectDefault()
       .withDetectMax(16)
       .withSizeMin(16)
-      .withSizeMax(64)
+      .withSizeMax(96)
       .withDetectThreshold(3)
   );
 
@@ -36,7 +37,7 @@ public class KmFsEnsemble {
     KmRegion.detectDefault()
       .withDetectMax(16)
       .withSizeMin(16)
-      .withSizeMax(64)
+      .withSizeMax(96)
       .withDetectThreshold(3)
   );
 
@@ -48,7 +49,15 @@ public class KmFsEnsemble {
       .withSizeMax(96)
   );
 
-  public final KmEns ens = ens(face).withId("face")
+  private final KmAvg3F faceAvg = new KmAvg3F().init(24);
+
+  private KmBounds applySg(KmBounds b, KmAvg3F avg) {
+    avg.update(b);
+    avg.copyTo(b);
+    return b;
+  }
+
+  public final KmEns ens = ens(face, b -> applySg(b, faceAvg)).withId("face")
     .then(ens(eyePup, kb -> kb.shift(.4f, .3f).resize(.5f)).withId("r-ey"))
     .then(ens(eyeCornerIn, kb -> kb.shift(.4f, .4f).resize(.2f)).withId("r-ec-in"))
     .then(ens(eyeCornerOut, kb -> kb.shift(.4f, .2f).resize(.2f)).withId("r-ec-ou"))

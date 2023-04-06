@@ -1,11 +1,13 @@
 package io.vacco.kimaris.impl;
 
 import io.vacco.kimaris.schema.*;
+import io.vacco.kimaris.util.KmMath;
+
 import java.util.concurrent.*;
 
-import static io.vacco.kimaris.impl.KmMath.*;
+import static io.vacco.kimaris.util.KmMath.*;
 import static io.vacco.kimaris.impl.KmTrees.*;
-import static io.vacco.kimaris.impl.KmLogging.*;
+import static io.vacco.kimaris.util.KmLogging.*;
 import static io.vacco.kimaris.schema.KmBounds.bounds;
 import static java.util.stream.Collectors.toList;
 import static java.lang.Math.max;

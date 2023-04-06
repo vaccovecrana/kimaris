@@ -9,10 +9,12 @@ public class KmConfig {
 
   public static final long PicoVersion = 3;
 
-  //////////////// Cascade parameters ////////////////
+  //////////////// Common parameters ////////////////
 
   public static int MaxTreeDepth = 6;
   public static int MaxTreesPerStage = 16;
+
+  //////////////// Train data search parameters ////////////////
 
   public static float StageTpr = 0.98f;
   public static float StageFpr = 0.4f;
@@ -21,8 +23,6 @@ public class KmConfig {
   public static float StageThresholdDelta = 0.001f;
 
   public static float FprThreshold = 0.01f;
-
-  //////////////// Train data search parameters ////////////////
 
   public static int Kb0 = 4096, Kb1 = 1024, NRands = 128;
 

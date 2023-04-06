@@ -1,6 +1,6 @@
 package impl;
 
-import io.vacco.kimaris.impl.KmMath;
+import io.vacco.kimaris.util.KmMath;
 import io.vacco.kimaris.schema.*;
 import j8spec.annotation.DefinedOrder;
 import j8spec.junit.J8SpecRunner;

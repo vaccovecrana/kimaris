@@ -3,6 +3,7 @@ package datasets.face_synthetics;
 import impl.*;
 import io.vacco.kimaris.impl.*;
 import io.vacco.kimaris.schema.*;
+import io.vacco.kimaris.util.KmLogging;
 import io.vacco.oruzka.core.*;
 import io.vacco.oruzka.io.OzIo;
 import javax.imageio.ImageIO;
@@ -100,7 +101,7 @@ public class KmFsGen {
 
   public static void main(String[] args) {
     var mk = KmIBugMark.EyePup;
-    var images = loadImages(mk, 8192).updateSizeRange();
+    var images = loadImages(mk, 32768).updateSizeRange();
 
     KmLogging.withLog(new KmTestLog().withLogInfo(true));
     var kc = train(mk.maxTreesPerStage, mk.maxTreeDepth, mk.trainScale, images, true);

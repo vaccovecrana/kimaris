@@ -1,6 +1,6 @@
 package impl;
 
-import io.vacco.kimaris.impl.KmLogging;
+import io.vacco.kimaris.util.KmLogging;
 
 public class KmTestLog implements KmLogging.KmLog {
 

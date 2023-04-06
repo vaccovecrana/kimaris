@@ -31,9 +31,7 @@ public class KmCamTest {
 
     private final KmImage ki = new KmImage();
     private final KmFsEnsemble face = new KmFsEnsemble();
-
     private final Map<String, KmBounds> detections = new ConcurrentHashMap<>();
-    private final Map<String, KmAvg3F> averages = new ConcurrentHashMap<>();
 
     public CamView() {
       setTitle(CamView.class.getCanonicalName());
@@ -72,35 +70,16 @@ public class KmCamTest {
       }
     }
 
-    private void drawAvgDetections(Graphics2D g) {
-      for (var e : averages.entrySet()) {
-        var r = e.getValue().av0.val;
-        var c = e.getValue().av1.val;
-        var s = e.getValue().av2.val;
-        var rX = c + (s / 2);
-        var rY = r + (s / 2);
-        circle.setFrameFromCenter(c, r, rX, rY);
-        g.draw(circle);
-        g.drawOval((int) c, (int) r, 2, 2);
-        g.drawString(String.format("[%s]", e.getKey()), rX, rY);
-      }
-    }
-
     private void drawDetections(Graphics2D g) {
       g.setColor(Color.RED);
       g.setFont(font);
       g.setStroke(bs);
-      // drawRawDetections(g);
-      drawAvgDetections(g);
+      drawRawDetections(g);
     }
 
     public void updateCam(BufferedImage bi) {
       KmImages.setMeta(ki, bi, true);
       face.ens.run(ki, detections);
-      for (var det : detections.values()) {
-        var avg = averages.computeIfAbsent(det.tag, t -> new KmAvg3F().init(6));
-        avg.update(det);
-      }
       SwingUtilities.invokeLater(() -> {
         var g = bgi.createGraphics();
         g.setBackground(Color.BLUE);

@@ -14,7 +14,6 @@ public class KmImageList extends ArrayList<KmImage> {
     stream()
       .flatMap(img -> img.objects.stream())
       .mapToInt(obj -> obj.bounds.s)
-      .filter(i -> i >= 8)
       .min().ifPresent(sm -> this.sizeMin = sm);
     stream()
       .flatMap(img -> img.objects.stream())

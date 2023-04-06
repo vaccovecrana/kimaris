@@ -1,4 +1,4 @@
-package io.vacco.kimaris.impl;
+package io.vacco.kimaris.util;
 
 import java.util.Objects;
 
@@ -13,7 +13,7 @@ public class KmLogging {
     boolean isTraceEnabled();
   }
 
-  protected static KmLog log;
+  public static KmLog log;
 
   public static void withLog(KmLog log) {
     KmLogging.log = Objects.requireNonNull(log);

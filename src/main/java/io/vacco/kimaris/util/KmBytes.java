@@ -1,4 +1,4 @@
-package io.vacco.kimaris.impl;
+package io.vacco.kimaris.util;
 
 public class KmBytes {
 

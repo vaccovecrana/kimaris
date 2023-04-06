@@ -1,8 +1,8 @@
-package io.vacco.kimaris.impl;
+package io.vacco.kimaris.util;
 
 import io.vacco.kimaris.schema.*;
 
-import static io.vacco.kimaris.impl.KmBytes.pack;
+import static io.vacco.kimaris.util.KmBytes.pack;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 

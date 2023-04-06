@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 import java.util.function.Function;
 
 import static java.util.stream.Collectors.toMap;
-import static io.vacco.kimaris.impl.KmBytes.*;
+import static io.vacco.kimaris.util.KmBytes.*;
 
 public class KmImages {
 

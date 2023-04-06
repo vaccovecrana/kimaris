@@ -4,6 +4,8 @@ import impl.KmMathTest;
 import impl.KmTestLog;
 import io.vacco.kimaris.impl.*;
 import io.vacco.kimaris.schema.*;
+import io.vacco.kimaris.util.KmLogging;
+import io.vacco.kimaris.util.KmMath;
 import io.vacco.oruzka.core.OFnSupplier;
 import io.vacco.oruzka.io.OzIo;
 import javax.imageio.ImageIO;

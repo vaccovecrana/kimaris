@@ -2,11 +2,12 @@
 package io.vacco.kimaris.impl;
 
 import io.vacco.kimaris.schema.*;
+import io.vacco.kimaris.util.KmMath;
 
-import static io.vacco.kimaris.impl.KmBytes.*;
+import static io.vacco.kimaris.util.KmBytes.*;
 import static io.vacco.kimaris.schema.KmClass.classify;
 import static io.vacco.kimaris.impl.KmSampling.*;
-import static io.vacco.kimaris.impl.KmLogging.*;
+import static io.vacco.kimaris.util.KmLogging.*;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.lang.String.format;

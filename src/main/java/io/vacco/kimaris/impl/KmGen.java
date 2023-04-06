@@ -3,7 +3,7 @@ package io.vacco.kimaris.impl;
 import io.vacco.kimaris.schema.*;
 
 import static io.vacco.kimaris.impl.KmTrees.*;
-import static io.vacco.kimaris.impl.KmLogging.*;
+import static io.vacco.kimaris.util.KmLogging.*;
 import static java.lang.Math.exp;
 import static java.lang.String.format;
 

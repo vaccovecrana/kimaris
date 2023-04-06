@@ -2,7 +2,7 @@ package datasets.face_synthetics;
 
 import io.vacco.kimaris.schema.*;
 
-import static io.vacco.kimaris.impl.KmMath.eclDist;
+import static io.vacco.kimaris.util.KmMath.eclDist;
 import static io.vacco.kimaris.schema.KmBounds.bounds;
 import static io.vacco.kimaris.schema.KmPoint.pt;
 import static java.lang.Float.parseFloat;

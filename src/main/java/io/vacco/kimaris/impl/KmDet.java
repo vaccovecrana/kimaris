@@ -1,6 +1,8 @@
 package io.vacco.kimaris.impl;
 
 import io.vacco.kimaris.schema.*;
+import io.vacco.kimaris.util.KmMath;
+
 import java.util.*;
 
 import static io.vacco.kimaris.impl.KmSampling.findObjects;

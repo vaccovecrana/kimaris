@@ -6,6 +6,9 @@ import impl.KmMathTest;
 import impl.KmTestLog;
 import io.vacco.kimaris.impl.*;
 import io.vacco.kimaris.schema.*;
+import io.vacco.kimaris.util.KmLogging;
+import io.vacco.kimaris.util.KmMath;
+
 import javax.imageio.ImageIO;
 import java.io.*;
 

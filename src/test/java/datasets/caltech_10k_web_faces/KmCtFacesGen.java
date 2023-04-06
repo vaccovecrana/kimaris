@@ -3,6 +3,7 @@ package datasets.caltech_10k_web_faces;
 import impl.*;
 import io.vacco.kimaris.impl.*;
 import io.vacco.kimaris.schema.*;
+import io.vacco.kimaris.util.KmLogging;
 import io.vacco.oruzka.core.OFnSupplier;
 import io.vacco.oruzka.io.OzIo;
 import javax.imageio.ImageIO;

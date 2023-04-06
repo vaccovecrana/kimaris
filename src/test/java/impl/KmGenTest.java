@@ -3,6 +3,8 @@ package impl;
 import com.google.gson.*;
 import io.vacco.kimaris.impl.*;
 import io.vacco.kimaris.schema.*;
+import io.vacco.kimaris.util.KmLogging;
+import io.vacco.kimaris.util.KmMath;
 import io.vacco.oruzka.core.OFnBlock;
 import j8spec.annotation.DefinedOrder;
 import j8spec.junit.J8SpecRunner;
