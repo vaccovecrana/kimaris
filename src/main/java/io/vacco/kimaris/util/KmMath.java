@@ -8,17 +8,13 @@ import static java.lang.Math.min;
 
 public class KmMath {
 
-  public static double sqrt(double d) {
-    return Double.longBitsToDouble(
-      ((Double.doubleToRawLongBits(d) >> 32) + 1072632448) << 31
-    );
-  }
+
 
   public static double eclDist(double x0, double y0,
                                double x1, double y1) {
-    return sqrt(
+    return Math.sqrt(
       ((x1 - x0) * (x1 - x0)) +
-        ((y1 - y0) * (y1 - y0))
+      ((y1 - y0) * (y1 - y0))
     );
   }
 
