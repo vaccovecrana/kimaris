@@ -75,7 +75,7 @@ public class KmFsGen {
     var kil = new KmImageList();
     Collections.shuffle(fl);
     var it = fl.iterator();
-    while (ik < limit) {
+    while (ik < limit && it.hasNext()) {
       var img = it.next();
       var segF = new File(img.getParentFile(), img.getName().replace(".png", "_seg.png"));
       if (hasSegmentationClasses(segF, mark)) {
@@ -114,16 +114,14 @@ public class KmFsGen {
   }
 
   public static void main(String[] args) {
-    var mk = KmIBugMark.EyePup;
-    var images = loadImages(mk, 16384).updateSizeRange();
-
-    KmLogging.withLog(new KmTestLog().withLogInfo(true));
-    var kc = train(mk.maxTreesPerStage, mk.maxTreeDepth, mk.trainScale, images, true);
-    var kcOut = new File("./src/test/resources", mk.cascadeName);
-    OFnBlock.tryRun(() -> KmCascades.savePico(new FileOutputStream(kcOut), kc));
-    /*
-    */
-
+    for (var mk : KmIBugMark.all) {
+      System.out.printf("Now training %s%n", mk);
+      var images = loadImages(mk, 8192).updateSizeRange();
+      KmLogging.withLog(new KmTestLog().withLogInfo(true));
+      var kc = train(mk.maxTreesPerStage, mk.maxTreeDepth, mk.trainScale, images, true);
+      var kcOut = new File("./src/test/resources", mk.cascadeName);
+      OFnBlock.tryRun(() -> KmCascades.savePico(new FileOutputStream(kcOut), kc));
+    }
     /*
     KmLogging.withLog(new KmTestLog().withLogInfo(false));
     var models = KmFsGridSearch.apply(images);

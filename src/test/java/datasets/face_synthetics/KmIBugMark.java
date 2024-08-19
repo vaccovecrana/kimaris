@@ -9,8 +9,19 @@ public enum KmIBugMark {
   EyeCornerIn(9, 20, 1.25f, new int[] {3, 4}, "eye-corner-in", IB40, IB43), // TODO ok, just needs more training data.
   EyeCornerOut(9, 20, 1.20f, new int[] {3, 4}, "eye-corner-out", IB37, IB46), // TODO ok, just needs more training data.
 
-  MouthCornerOut(9, 16, 1.15f, new int[] {10, 11}, "mouth-corner-out", IB49, IB55)
+  MouthCornerOut(9, 16, 1.15f, new int[] {10, 11}, "mouth-corner-out", IB49, IB55),
+  MouthLipUp(8, 16, 1.1f, new int[] {10, 11}, "mouth-lip-up", IB51, IB53),
+  MouthLipLow(8, 16, 1.1f, new int[] {10, 11}, "mouth-lip-low", IB59, IB57),
+
+  EyebrowCorner(8, 16, 1.1f, new int[] {5, 6}, "eyebrow-corner", IB18, IB22, IB23, IB27),
+  EyebrowCenter(8, 16, 1.1f, new int[] {5, 6}, "eyebrow-center", IB20, IB25)
   ;
+
+  public static final KmIBugMark[] all = new KmIBugMark[] {
+    EyePup, EyeCornerIn, EyeCornerOut,
+    MouthCornerOut, MouthLipUp, MouthLipLow,
+    EyebrowCorner, EyebrowCenter
+  };
 
   public final String cascadeName;
   public final KmIBugPt[] points;
@@ -28,6 +39,10 @@ public enum KmIBugMark {
     this.cascadeName = Objects.requireNonNull(cascadeName);
     this.points = Objects.requireNonNull(points);
     this.requiredClasses = Objects.requireNonNull(requiredClasses);
+  }
+
+  public String getClassPath() {
+    return String.format("/%s", cascadeName);
   }
 
   @Override public String toString() {

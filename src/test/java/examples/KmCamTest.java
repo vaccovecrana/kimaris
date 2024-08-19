@@ -64,9 +64,9 @@ public class KmCamTest {
         var rX = c + (s / 2);
         var rY = r + (s / 2);
         circle.setFrameFromCenter(c, r, rX, rY);
-        g.draw(circle);
+        // g.draw(circle);
         g.drawOval(c, r, 2, 2);
-        g.drawString(String.format("[%s]", e.getKey()), rX, rY);
+        // g.drawString(String.format("[%s]", e.getKey()), rX, rY);
       }
     }
 

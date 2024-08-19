@@ -9,6 +9,13 @@ import static java.lang.Float.parseFloat;
 
 public enum KmIBugPt {
 
+  IB18(18, 20, 1.2f),
+  IB22(22, 20, 1.2f),
+  IB23(23, 25, 1.2f),
+  IB27(27, 25, 1.2f),
+  IB20(20, 22, 1.2f),
+  IB25(25, 27, 1.2f),
+
   IB40(40, 39, 1.3f),
   IB43(43, 44, 1.3f),
 
@@ -17,6 +24,12 @@ public enum KmIBugPt {
 
   IB49(49, 51, 1.5f),
   IB55(55, 53, 1.5f),
+
+  IB51(51, 53, 1.2f),
+  IB53(53, 51, 1.2f),
+
+  IB59(59, 57, 1.1f),
+  IB57(57, 59, 1.1f),
 
   IB69(69, 28, 1.4f), // face synthetics: right eye
   IB70(70, 28, 1.4f), // face synthetics: left eye
