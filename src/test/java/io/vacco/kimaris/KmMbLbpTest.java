@@ -1,4 +1,4 @@
-package io.vacco.kimaris.core;
+package io.vacco.kimaris;
 
 import com.google.gson.*;
 import io.vacco.kimaris.impl.*;
