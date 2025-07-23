@@ -98,7 +98,7 @@ public class KmMbLbp {
     for (int i = 0; i < lbpA.length; i++) {
       lbpA[i] = lbpL.get(i);
     }
-    onData.accept(dim.with(lrc[0], lrc[1]), lbpA);
+    onData.accept(dim.at(lrc[0], lrc[1]), lbpA);
   }
 
 }

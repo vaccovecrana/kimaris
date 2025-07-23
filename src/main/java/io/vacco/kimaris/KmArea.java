@@ -68,7 +68,7 @@ public class KmArea {
           }
           ri++;
         }
-        onRegion.accept(crd.with(r0, c0), reg);
+        onRegion.accept(crd.at(r0, c0), reg);
         c0 = c0 + colStride;
         cN = c0 + cols;
       } while (cN <= in[0].length);

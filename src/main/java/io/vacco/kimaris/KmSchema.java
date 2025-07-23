@@ -6,7 +6,7 @@ public class KmSchema {
     public int row;
     public int col;
 
-    public KmCoord with(int row, int col) {
+    public KmCoord at(int row, int col) {
       this.col = col;
       this.row = row;
       return this;
