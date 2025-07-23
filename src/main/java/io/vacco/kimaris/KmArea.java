@@ -1,11 +1,13 @@
-package io.vacco.kimaris.impl;
+package io.vacco.kimaris;
 
-public class KmIntImage {
+import java.util.function.BiConsumer;
 
-  public static void apply(short[][] in, short[][] out) {
+public class KmArea {
+
+  public static void areaSum(short[][] in, short[][] out) {
     short v;
     for (int i = 0; i < in[0].length; i++) { // columns
-      for (int j = 0; j < in.length; j++) { // rows
+      for (int j = 0; j < in.length; j++) {  // rows
         v = in[j][i];
         if (i > 0) { v = (short) (v + out[j][i - 1]); }
         if (j > 0) { v = (short) (v + out[j - 1][i]); }
@@ -48,6 +50,31 @@ public class KmIntImage {
     c = c - 1;
     r = r - 1;
     return areaOf(in, r, c, r, c + cols, r + rows, c + cols, r + rows, c);
+  }
+
+  public static void convolve(int rows, int cols, int rowStride, int colStride, short[][] in, BiConsumer<KmSchema.KmCoord, short[][]> onRegion) {
+    int r0 = 0, rN = r0 + rows;
+    short[][] reg = new short[rows][cols];
+    var crd = new KmSchema.KmCoord();
+    do {
+      int c0 = 0, cN = cols;
+      do {
+        int ri = 0;
+        for (int i = r0; i < rN; i++) {
+          int rj = 0;
+          for (int j = c0; j < cN; j++) {
+            reg[ri][rj] = in[i][j];
+            rj++;
+          }
+          ri++;
+        }
+        onRegion.accept(crd.with(r0, c0), reg);
+        c0 = c0 + colStride;
+        cN = c0 + cols;
+      } while (cN <= in[0].length);
+      r0 = r0 + rowStride;
+      rN = r0 + rows;
+    } while(rN <= in.length);
   }
 
 }

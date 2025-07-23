@@ -1,8 +1,6 @@
 package io.vacco.kimaris;
 
 import com.google.gson.*;
-import io.vacco.kimaris.impl.*;
-import io.vacco.kimaris.impl.KmImage;
 import j8spec.annotation.DefinedOrder;
 import j8spec.junit.J8SpecRunner;
 import org.junit.runner.RunWith;
@@ -35,7 +33,7 @@ public class KmMbLbpTest {
           true, true, true, true, true, true, true, true
       }));
 
-      short[][] imgIn = new short[][]{
+      var imgIn = new short[][]{
           {0, 1, 3, 5, 2, 7, 10, 7, 10, 9},
           {3, 7, 6, 9, 3, 8, 1, 8, 5, 8},
           {1, 11, 0, 7, 13, 7, 8, 12, 13, 1},
@@ -45,10 +43,10 @@ public class KmMbLbpTest {
           {7, 7, 6, 0, 9, 5, 10, 3, 8, 1},
           {12, 5, 6, 10, 11, 3, 6, 7, 9, 1}
       };
-      short[][] imgOut = new short[8][10];
-      boolean[] out = new boolean[8];
+      var imgOut = new short[8][10];
+      var out = new boolean[8];
 
-      KmIntImage.apply(imgIn, imgOut);
+      KmArea.areaSum(imgIn, imgOut);
       KmMbLbp.applyToRegion(imgOut, out, 3, 6, 1, 1, null);
       assertFalse(out[0]);
       assertFalse(out[1]);
@@ -60,7 +58,7 @@ public class KmMbLbpTest {
       assertFalse(out[7]);
       System.out.println(KmMbLbp.unsignedFrom(out));
 
-      boolean[] out0 = new boolean[8];
+      var out0 = new boolean[8];
       KmMbLbp.applyToRegion(imgOut, out0, 3, 4, 2, 1, null);
       KmMbLbp.applyToRegion(imgOut, out0, 3, 4, 2, 2, null);
       KmMbLbp.applyToRegion(imgOut, out0, 3, 4, 2, 3, null);
@@ -72,24 +70,21 @@ public class KmMbLbpTest {
   }
 
   private static final String[] imgA = new String[] {
-      "/sample-00.jpg",
-      "/sample-01.jpg"
+    "/strawberry.png"
   };
 
   static {
     it("Extracts MBLBP values from an image", () -> {
-      for (String path : imgA) {
+      for (var path : imgA) {
         var img = Objects.requireNonNull(KmMbLbpTest.class.getResource(path));
         var ip = KmImage.grayPixelsOf(img, null);
         var out = new File(String.format("%s-mblbp.png", img.getFile()).replace(".jpg", ""));
-
         System.out.println(out.getAbsolutePath());
-
         KmMbLbp.mbLbpImageOf(ip, 1, 1, (dim, data) -> KmImage.writePng(dim.col, dim.row, data, out));
       }
     });
     it("Extracts MBLBP histograms from an image", () -> {
-      for (String path : imgA) {
+      for (var path : imgA) {
         var img = Objects.requireNonNull(KmMbLbpTest.class.getResource(path));
         var ip = KmImage.grayPixelsOf(img, null);
         var lbpH = KmMbLbp.mbLbpHistogramOf(ip, 1, 1);

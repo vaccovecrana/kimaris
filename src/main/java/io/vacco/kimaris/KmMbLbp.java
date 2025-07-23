@@ -1,9 +1,8 @@
-package io.vacco.kimaris.impl;
+package io.vacco.kimaris;
 
-import io.vacco.kimaris.schema.*;
 import java.util.ArrayList;
 import java.util.function.*;
-import static io.vacco.kimaris.impl.KmIntImage.*;
+import static io.vacco.kimaris.KmArea.*;
 
 public class KmMbLbp {
 
@@ -12,7 +11,8 @@ public class KmMbLbp {
         (in[0]?1<<7:0) + (in[1]?1<<6:0) +
         (in[2]?1<<5:0) + (in[3]?1<<4:0) +
         (in[4]?1<<3:0) + (in[5]?1<<2:0) +
-        (in[6]?1<<1:0) + (in[7]?1:0));
+        (in[6]?1<<1:0) + (in[7]?1:0)
+    );
     return (short) (b & 0xff);
   }
 
@@ -53,13 +53,13 @@ public class KmMbLbp {
     );
   }
 
-  public static void mbLbpScan(KmImageParams ip, int rows, int cols, Consumer<KmMbLbpBlock> onBlock) {
+  public static void mbLbpScan(KmSchema.KmImageParams ip, int rows, int cols, Consumer<KmSchema.KmMbLbpBlock> onBlock) {
     var intImgBuf = ip.blankBuf();
-    var blk = new KmMbLbpBlock();
+    var blk = new KmSchema.KmMbLbpBlock();
     int rt3 = rows * 3, ct3 = cols * 3;
 
-    KmIntImage.apply(ip.grayMat, intImgBuf);
-    KmConvolve.apply(rt3, ct3, rt3, ct3, intImgBuf, (crd, reg) -> {
+    KmArea.areaSum(ip.grayMat, intImgBuf);
+    KmArea.convolve(rt3, ct3, rt3, ct3, intImgBuf, (crd, reg) -> {
       blk.region = reg;
       blk.origin = crd;
       applyToRegion(
@@ -72,17 +72,17 @@ public class KmMbLbp {
     });
   }
 
-  public static short[] mbLbpHistogramOf(KmImageParams ip, int blkRows, int blkCols) {
+  public static short[] mbLbpHistogramOf(KmSchema.KmImageParams ip, int blkRows, int blkCols) {
     var lbpHist = new short[256];
     mbLbpScan(ip, blkRows, blkCols, (blk) -> lbpHist[blk.lbp] = (short) (lbpHist[blk.lbp] + 1));
     return lbpHist;
   }
 
-  public static void mbLbpImageOf(KmImageParams ip, int blkRows, int blkCols, BiConsumer<KmCoord, short[]> onData) {
-    int[] rc = new int[] {-1, -1};
-    int[] lrc = new int[] {0, 0};
+  public static void mbLbpImageOf(KmSchema.KmImageParams ip, int blkRows, int blkCols, BiConsumer<KmSchema.KmCoord, short[]> onData) {
+    var rc = new int[] {-1, -1};
+    var lrc = new int[] {0, 0};
     var lbpL = new ArrayList<Short>();
-    var dim = new KmCoord();
+    var dim = new KmSchema.KmCoord();
     mbLbpScan(ip, blkRows, blkCols, (blk) -> {
       lbpL.add(blk.lbp);
       if (blk.origin.row > rc[0]) {
@@ -94,7 +94,7 @@ public class KmMbLbp {
         lrc[1] = lrc[1] + 1;
       }
     });
-    short[] lbpA = new short[lbpL.size()];
+    var lbpA = new short[lbpL.size()];
     for (int i = 0; i < lbpA.length; i++) {
       lbpA[i] = lbpL.get(i);
     }

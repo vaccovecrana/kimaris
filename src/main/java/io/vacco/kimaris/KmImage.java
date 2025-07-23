@@ -1,6 +1,5 @@
-package io.vacco.kimaris.impl;
+package io.vacco.kimaris;
 
-import io.vacco.kimaris.schema.KmImageParams;
 import javax.imageio.ImageIO;
 import java.awt.image.*;
 import java.io.ByteArrayInputStream;
@@ -10,8 +9,8 @@ import java.net.URL;
 
 public class KmImage {
 
-  public static KmImageParams grayPixelsOf(BufferedImage img, KmImageParams ip) {
-    ip = ip == null ? new KmImageParams() : ip;
+  public static KmSchema.KmImageParams grayPixelsOf(BufferedImage img, KmSchema.KmImageParams ip) {
+    ip = ip == null ? new KmSchema.KmImageParams() : ip;
     ip.cols = img.getWidth();
     ip.rows = img.getHeight();
     ip.grayMat = ip.grayMat == null ? new short[ip.rows][ip.cols] : ip.grayMat;
@@ -31,7 +30,7 @@ public class KmImage {
     return ip;
   }
 
-  public static KmImageParams grayPixelsOf(URL imgUrl, KmImageParams ip) {
+  public static KmSchema.KmImageParams grayPixelsOf(URL imgUrl, KmSchema.KmImageParams ip) {
     try {
       var img = ImageIO.read(imgUrl);
       return grayPixelsOf(img, ip);
@@ -40,7 +39,7 @@ public class KmImage {
     }
   }
 
-  public static KmImageParams grayPixelsOf(byte[] raw, KmImageParams ip) {
+  public static KmSchema.KmImageParams grayPixelsOf(byte[] raw, KmSchema.KmImageParams ip) {
     try (var is = new ByteArrayInputStream(raw)) {
       var img = ImageIO.read(is);
       return grayPixelsOf(img, ip);
@@ -62,4 +61,5 @@ public class KmImage {
       throw new IllegalStateException(ex.getMessage(), ex);
     }
   }
+
 }
