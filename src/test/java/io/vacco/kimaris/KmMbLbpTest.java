@@ -80,14 +80,14 @@ public class KmMbLbpTest {
         var ip = KmImage.grayPixelsOf(img, null);
         var out = new File(String.format("%s-mblbp.png", img.getFile()).replace(".jpg", ""));
         System.out.println(out.getAbsolutePath());
-        KmMbLbp.mbLbpImageOf(ip, 1, 1, (dim, data) -> KmImage.writePng(dim.col, dim.row, data, out));
+        KmMbLbp.mbLbpImageOf(ip, 1, 1, true, (dim, data) -> KmImage.writePng(dim.col, dim.row, data, out));
       }
     });
     it("Extracts MBLBP histograms from an image", () -> {
       for (var path : imgA) {
         var img = Objects.requireNonNull(KmMbLbpTest.class.getResource(path));
         var ip = KmImage.grayPixelsOf(img, null);
-        var lbpH = KmMbLbp.mbLbpHistogramOf(ip, 1, 1);
+        var lbpH = KmMbLbp.mbLbpHistogramOf(ip, 1, 1, true);
         var chart = obj(
             kv("tooltip", obj(kv("show", true))),
             kv("xAxis", obj(
